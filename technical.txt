@@ -1,0 +1,6 @@
+Python,Java,C++,Javascript,React,Android,iOS,PHP,HTML,MySQL,LAMP,LEMP,MongoDB,MS
+ SQL,Go 
+Python,SQL,Linux Scripting,Cisco Firewall,IDS/IPS,Cloud Security,OpenVAS,NIST 
+Framework,Log Analysis,Windows Hardening 
+Python,Pandas,NumPy,TensorFlow,SQL,MongoDB,Java,Machine 
+Learning,CNN,OpenCV,NLTK,Power BI,Matplotlib,Data Warehousing
