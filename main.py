@@ -6,7 +6,7 @@ def check_input(question, lower, upper):
             if choice < lower or choice > upper:
                 print("Please enter either 0, 1 or 2.")
             else:
-                break
+                return choice
         except:
             print("Please enter a valid number.")
 
@@ -18,3 +18,11 @@ print("2. Login")
 print("0. Exit")
 
 check_input("Enter option: ", 0, 2)
+
+def company():
+
+    print(" 1) Edit Company Profile")
+    print(" 2) View jobs posted")
+    print(" 3) Add new job")
+
+    option = check_input("Enter option: ", 1, 3)
