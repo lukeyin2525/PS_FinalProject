@@ -8,7 +8,7 @@ def check_input(question, lower, upper):
             else:
                 return choice
         except:
-            print("Please enter a valid number.")
+            print("Please enter a valid number.")    
 
 
 #Company class, will be used for two companies, include all information.
@@ -86,7 +86,6 @@ def find_company(user, array):
     #If company is not found, return -1
     return -1
 
-
 def save_companies(filename, companies):
     #Open the file and rewrite
     with open(filename, 'w') as file:
@@ -102,42 +101,51 @@ def save_companies(filename, companies):
 #Take in which company we are gonna use, according to the log in
 def company(company):
     
-    #Before starting, load the companies into an array
-    companies = load_companies("companyinfo.txt")
+    while True:
+        #Before starting, load the companies into an array
+        companies = load_companies("companyinfo.txt")
 
-    #Ask the users for the first option
-    print(" 1) Edit Company Profile")
-    print(" 2) View jobs posted")
-    print(" 3) Add new job")
+        #Ask the users for the first option
+        print(" 1) Edit Company Profile")
+        print(" 2) View jobs posted")
+        print(" 3) Add new job")
+        print(" 4) Exit")
 
-    option = check_input("Enter option: ", 1, 3)
+        option = check_input("Enter option: ", 1, 4)
 
-    #If option is 1, then, show the currennt company info
-    if option == 1:
-        
-        index = find_company(company, companies)
+        #If option is 1, then, show the currennt company info
+        if option == 1:
+            
+            index = find_company(company, companies)
 
-        if index == -1:
-            print("The company does not exist.")
-        
-        print(f"Company index : {index}")
-        print(f"Company Name : {companies[index].name}")
-        print(f"Company Url: {companies[index].url}")
-        print(f"Company Description: {companies[index].description}")
+            if index == -1:
+                print("The company does not exist.")
+            
+            print(f"Company index : {index}")
+            print(f"Company Name : {companies[index].name}")
+            print(f"Company Url: {companies[index].url}")
+            print(f"Company Description: {companies[index].description}")
 
-        answer = check_input("Enter 1 to edit, or 0 to return back to menu", 0, 1)
+            answer = check_input("Enter 1 to edit, or 0 to return back to menu", 0, 1)
 
-        if answer == 1:
-            #Ask the user for new descriptions
-            new_name = input("Enter the new company name: ")
-            new_url = input("Enter the new company url: ")
-            new_description = input("Enter the new company description: ")
+            if answer == 1:
 
-            companies[index].name = new_name
-            companies[index].url = new_url
-            companies[index].description = new_description
+                #Ask the user for new descriptions
+                new_name = input("Enter the new company name: ")
+                new_url = input("Enter the new company url: ")
+                new_description = input("Enter the new company description: ")
 
-            save_companies("companyinfo.txt", companies)
+                companies[index].name = new_name
+                companies[index].url = new_url
+                companies[index].description = new_description
+
+                save_companies("companyinfo.txt", companies)
+            
+            elif answer == 0:
+                continue
+
+        elif option == 4:
+            break
 
 #Start of main code
 
@@ -148,4 +156,4 @@ print("0. Exit")
 
 check_input("Enter option: ", 0, 2)
 
-company(input("Enter company user"))
+company(input("Commpany: "))
