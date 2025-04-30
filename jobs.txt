@@ -1,1 +1,3 @@
-
+Title, Category, Job Type,comp2, Min Education, Exp Required, Tech Skills, Mgr
+description
+-----
