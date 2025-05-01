@@ -40,8 +40,8 @@ def view_jobs(jobs):
             print(f"Technical skills required: {', '.join(job.tech_skills)}")
             print(f"Managerial skills required: {', '.join(job.mgr_skills)}")
             print(f"Additional Job Description: {job.description}")
-            print(f"Company Description: {job.company_description}")
-            print(f"Company URL: {job.company_url}")
+            print(f"Company Description: {company.description}")
+            print(f"Company URL: {company.url}")
             input("Enter 0 to go back: ")
 
 # Filter jobs using sequential search
