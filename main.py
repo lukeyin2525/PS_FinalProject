@@ -10,7 +10,7 @@ def check_input(question, lower, upper):
         except:
             print("Please enter a valid number.")    
 
-# Job listing system
+#Job listing system
 def view_jobs(jobs):
     while True:
         #Display the job listings in a formatted table, aligning the columns
@@ -24,9 +24,11 @@ def view_jobs(jobs):
         #If user enters 0, exit the loop
         if option == 0:
             break
+
         #If user enters -1, call the filter_jobs function to filter jobs
         elif option == -1:
             filter_jobs(jobs)
+
         #If user enters a valid job number, display the details of that job
         else:
             job = jobs[option - 1]
@@ -40,11 +42,11 @@ def view_jobs(jobs):
             print(f"Technical skills required: {', '.join(job.tech_skills)}")
             print(f"Managerial skills required: {', '.join(job.mgr_skills)}")
             print(f"Additional Job Description: {job.description}")
-            print(f"Company Description: {company.description}")
-            print(f"Company URL: {company.url}")
+            print(f"Company Description: {job.company.description}")
+            print(f"Company URL: {job.company.url}")
             input("Enter 0 to go back: ")
 
-# Filter jobs using sequential search
+#Filter jobs using sequential search
 def filter_jobs(jobs):
     #Filter options for user to pick
     print("1) Filter by Category")
@@ -84,11 +86,47 @@ def filter_jobs(jobs):
             if min_pay >= pay:
                 filtered_jobs.append(job)
 
-    # Prints the filtered jobs
+    #Prints the filtered jobs
     print(f"{'Job Title':<20} {'Category':<20} {'Company':<15} {'Job Type':<20} {'Min Education':<15} {'Exp Req':<10}")
     for i, job in enumerate(filtered_jobs, start=1):
         print(f"{i}) {job.title:<20} {job.category:<20} {job.company:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
 
+#Login System
+def login_system():
+    #Login system(Includes admin, company and jobseeker)
+    while True:
+        print("Enter username and password to login.")
+        userInput = input("Enter username: ").strip()
+        passwordInput = input("Enter password: ").strip()
+        #Check if the username and password belongs to an admin, company or jobseeker
+        with open("users.txt", "r") as file:
+            for line in file:
+                line = line.strip()
+                if line == "":
+                    continue
+                parts = line.split(",")
+                if len(parts) < 3:
+                    continue
+                username = parts[0].strip()
+                password = parts[1].strip()
+                user_type = parts[2].strip()
+
+                #If the username and password match, proceed with role specific actions
+                if username == userInput and password == passwordInput:
+                    if user_type == "admin":
+                        print("Welcome Admin!")
+                        admin()
+                        break
+                    elif user_type == "company":
+                        print("Welcome Company!")
+                        company(username)
+                        break
+                    elif user_type == "jobseeker":
+                        print("Welcome Jobseeker!")
+                        jobseeker(username)
+                        break
+                    #If the username and password do not match, ask the user for input again
+            print("Invalid username or password. Please try again.")
 
 class Job:
     #CompanyTitle, Category, Job Type, Min Education, Exp Required
@@ -484,6 +522,15 @@ print("1. View Jobs")
 print("2. Login")
 print("0. Exit")
 
-check_input("Enter option: ", 0, 2)
+option = check_input("Enter option: ", 0, 2)
 
-company(input("Commpany: "))
+if option == 1:
+    #Load the jobs from the file
+    jobs = load_jobs("jobs.txt")
+    view_jobs(jobs)
+
+elif option == 2:
+    login_system()
+
+elif option == 0:
+    print("Exiting the application. Thank you for using SCSU Jobs Portal.")
