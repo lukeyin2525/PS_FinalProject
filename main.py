@@ -229,7 +229,7 @@ def save_companies(filename, companies):
         print("Loading................")
         print("File has been successfully updated.")
 
-def load_jobs(filename):
+def load_jobs(filename, companies):
     #Create a list jobs to go through
     jobs = []
 
@@ -264,7 +264,10 @@ def load_jobs(filename):
             exp_required= header[5].strip()
             min_pay = header[6].strip()
             max_pay = header[7].strip()
-            
+
+            for comp in companies:
+                if company == comp.username:
+                    company = comp
             #Then, empty strings to store the values
             tech_skills = ""
             mgr_skills = ""
@@ -283,7 +286,7 @@ def load_jobs(filename):
                 description = lines[2].strip()
 
             #Append it into a list while creating it as a class Job( )
-            jobs.append(Job(title.strip(), category.strip(), job_type.strip(), company.strip(), min_education.strip(), exp_required.strip(), tech_skills, mgr_skills,min_pay, max_pay ,description.strip()))
+            jobs.append(Job(title.strip(), category.strip(), job_type.strip(), comp, min_education.strip(), exp_required.strip(), tech_skills, mgr_skills,min_pay, max_pay ,description.strip()))
 
     #Finally, return the jobs array
     return jobs
