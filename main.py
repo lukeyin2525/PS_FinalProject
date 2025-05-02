@@ -1,3 +1,4 @@
+import getpass
 #Function to check input, takes 3 parameters -  question to ask, lower limit of the input, upper limit of the inputs
 def check_input(question, lower, upper):
     while True:
@@ -96,8 +97,8 @@ def login_system():
     #Login system(Includes admin, company and jobseeker)
     while True:
         print("Enter username and password to login.")
-        userInput = input("Enter username: ").strip()
-        passwordInput = input("Enter password: ").strip()
+        userInput = input("Enter username: ")
+        passwordInput = getpass.getpass("Enter password: ")
         #Check if the username and password belongs to an admin, company or jobseeker
         with open("users.txt", "r") as file:
             for line in file:
@@ -126,7 +127,10 @@ def login_system():
                         jobseeker(username)
                         break
             #If the username and password do not match, ask the user for input again
-            print("Invalid username or password. Please try again.")
+            if username != userInput or password != passwordInput:
+                print("Invalid username or password. Please try again.")
+            else:
+                break
 
 def admin():
     #Admin menu
@@ -135,8 +139,9 @@ def admin():
         print("1) View all users")
         print("2) Add new user")
         print("3) Remove user")
+        print("4) Exit")
         
-        a_option = check_input("Enter option: ", 1, 3)
+        a_option = check_input("Enter option: ", 1, 4)
 
         #If user picks option 1, view all user accounts
         if a_option == 1:
@@ -160,11 +165,13 @@ def admin():
                     user_type = parts[2].strip()
                     #Prints details in formatted table
                     print(f"Username: {username}, Password: {password}, User Type: {user_type}")
+
         #If user picks option 2, add new user
         elif a_option == 2:
             #Input new user details(username, password, user type)
             while True:
-                new_username = input("Enter username: ").strip()
+                new_username = input("Enter username: ")
+                existing_user = False
                 #Checks if username already exists
                 with open("users.txt", "r") as file:
                     for line in file:
@@ -174,14 +181,15 @@ def admin():
                         parts = line.split(",")
                         if len(parts) < 3:
                             continue
-                        username = parts[0].strip()
+                        username = parts[0]
                         #If the username already exists, ask user to choose a different username
                         if username == new_username:
                             print("Username already exists. Please choose a different username.")
-                        #If username doesn't exist, break the loop
-                        elif username != new_username:
-                            break 
-                            
+                            existing_user = True
+                            break
+                    #if username exists, asks the user to enter again
+                    if existing_user:
+                        continue
                 #If username is unique, ask for password and user type 
                 while True:       
                     new_password = input("Enter password: ").strip()
@@ -214,6 +222,42 @@ def admin():
                 if another_user != "y":
                     break
         
+        #If user picks option 3, remove user
+        elif a_option == 3:
+            delete_user = input("Enter username to delete: ")
+            delete_found = False #Tracks if username is found
+            #Read the users.txt file and check if the username exists
+            with open("users.txt", "r") as f:
+                lines = f.readlines()
+            #If the username exists, remove the username from the file
+            with open("users.txt", "w") as f:
+                for line in lines:
+                    line = line.strip()
+                    if line == "":
+                        continue
+                    parts = line.split(",")
+                    if len(parts) < 3:
+                        continue
+                    username = parts[0].strip()
+                    #If the username does not match the user to be deleted, write it back to the file
+                    if username == delete_user:
+                        delete_found = True
+                    else:
+                        f.write(line + "\n")
+                
+                #If username is found, print success message
+                if delete_found:
+                    print(f"User '{delete_user}' deleted successfully.")
+                #Prints if username is not found
+                else:
+                    print(f"User '{delete_user}' not found.")
+                #Ask admin if they want to delete another user
+                delete_again = input("Do you want to delete another user? (y/n): ").lower()
+                if delete_again != "y":
+                    admin()
+        #Option 4, exit the admin menu
+        elif a_option == 4:
+            return
 
 class Job:
     #CompanyTitle, Category, Job Type, Min Education, Exp Required
@@ -724,7 +768,6 @@ def company(company):
             break
 
 #Start of main code
-
 print("@@@@ SCSU Jobs Portal @@@@")
 print("1. View Jobs")
 print("2. Login")
