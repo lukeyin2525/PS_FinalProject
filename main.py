@@ -34,7 +34,7 @@ def view_jobs(jobs):
             job = jobs[option - 1]
             print(f"Job Title: {job.title}")
             print(f"Category: {job.category}")
-            print(f"Pay: {job.pay}")
+            print(f"Pay: {job.min_pay} to {job.max_pay}")
             print(f"Job Type: {job.job_type}")
             print(f"Min Education: {job.min_education}")
             print(f"Years of Experience required: {job.exp_required}")
