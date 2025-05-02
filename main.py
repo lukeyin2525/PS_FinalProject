@@ -776,8 +776,10 @@ print("0. Exit")
 option = check_input("Enter option: ", 0, 2)
 
 if option == 1:
+    #Load companies from file
+    companies = load_companies("companyinfo.txt")
     #Load the jobs from the file
-    jobs = load_jobs("jobs.txt")
+    jobs = load_jobs("jobs.txt", companies)
     view_jobs(jobs)
 
 elif option == 2:
