@@ -1,3 +1,12 @@
-Title, Category, Job Type,comp2, Min Education, Exp Required, Tech Skills, Mgr
+Title, Category, Job Type,comp2, Min Education, Exp Required, MinPay, MaxPay
+TechSkills, Mgr Skills
+description
+-----
+Title2, Category, Job Type,comp1, Min Education, Exp Required, MinPay, MaxPay
+TechSkills, Mgr Skills
+description
+-----
+Title3, Category, Job Type,comp1, Min Education, Exp Required, MinPay, MaxPay
+TechSkills, Mgr Skills
 description
 -----
