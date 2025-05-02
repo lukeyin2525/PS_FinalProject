@@ -440,7 +440,7 @@ def company(company):
     while True:
         #Before starting, load the companies into an array
         companies = load_companies("companyinfo.txt")
-        jobs = load_jobs("jobs.txt") 
+        jobs = load_jobs("jobs.txt",companies) 
         jobseekers = load_jobseekers("jobseeker.txt")
         
         link_applications(jobseekers, jobs)
