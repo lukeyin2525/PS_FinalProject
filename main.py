@@ -18,7 +18,7 @@ def view_jobs(jobs):
         print(f"{'Job Title':<20} {'Category':<20} {'Company':<15} {'Job Type':<20} {'Min Education':<15} {'Exp Req':<10}")
         #Displays index of each job in the list(1 to n) and the details of each job in the list
         for i, job in enumerate(jobs, start=1):
-            print(f"{i}) {job.title:<20} {job.category:<20} {job.company:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
+            print(f"{i}) {job.title:<20} {job.category:<20} {job.company.name:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
         print("To filter jobs, enter -1.")
         option = check_input("Enter the job number to view details, or 0 to go back: ", -1, len(jobs))
 
@@ -39,7 +39,7 @@ def view_jobs(jobs):
             print(f"Job Type: {job.job_type}")
             print(f"Min Education: {job.min_education}")
             print(f"Years of Experience required: {job.exp_required}")
-            print(f"Company: {job.company}")
+            print(f"Company: {job.company.name}")
             print(f"Technical skills required: {', '.join(job.tech_skills)}")
             print(f"Managerial skills required: {', '.join(job.mgr_skills)}")
             print(f"Additional Job Description: {job.description}")
@@ -364,7 +364,7 @@ def load_companies(filename):
             name = parts[0]
             url = parts[1]
             comp = parts[2]
-
+ 
             #Append it into a list while creating it as a class Company( )
             companies.append(Company(name.strip(), url.strip(), comp.strip(), description.strip()))
 
@@ -455,7 +455,7 @@ def load_jobs(filename, companies):
                 description = lines[2].strip()
 
             #Append it into a list while creating it as a class Job( )
-            jobs.append(Job(title.strip(), category.strip(), job_type.strip(), comp, min_education.strip(), exp_required.strip(), tech_skills, mgr_skills,min_pay, max_pay ,description.strip()))
+            jobs.append(Job(title.strip(), category.strip(), job_type.strip(), company, min_education.strip(), exp_required.strip(), tech_skills, mgr_skills,min_pay, max_pay ,description.strip()))
 
     #Finally, return the jobs array
     return jobs
