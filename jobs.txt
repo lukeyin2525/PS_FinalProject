@@ -2,7 +2,7 @@ Engineer,Cybersecurity,Full Time Senior,comp2,Diploma,2, 3000, 6000
 P,y,t,h,o,n,,,J,a,v,a,,,C,+,+;
 description
 -----
-Title2,Category,Job Type,comp2,Min Education,Exp Required, MinPay, MaxPay
+Title2,Category,Job Type,comp2,Min Education,Exp Required, 5000, 8000
 T,e,c,h,S,k,i,l,l,s,,, ,M,g,r, ,S,k,i,l,l,s;
 description
 -----

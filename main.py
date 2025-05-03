@@ -81,7 +81,7 @@ def filter_jobs(jobs):
 
     #If user selects option 4, filter by pay
     elif f_option == 4:
-        pay = input("Enter minimum pay: ").strip()
+        pay = int(input("Enter minimum pay: ").strip())
         for job in jobs:
             if int(job.min_pay) >= pay:
                 filtered_jobs.append(job)
@@ -89,7 +89,7 @@ def filter_jobs(jobs):
     #Prints the filtered jobs
     print(f"{'Job Title':<20} {'Category':<20} {'Company':<15} {'Job Type':<20} {'Min Education':<15} {'Exp Req':<10}")
     for i, job in enumerate(filtered_jobs, start=1):
-        print(f"{i}) {job.title:<20} {job.category:<20} {job.company:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
+        print(f"{i}) {job.title:<20} {job.category:<20} {job.company.name:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
 
 #Login System
 def login_system():
