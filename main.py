@@ -1,3 +1,4 @@
+import getpass
 #Function to check input, takes 3 parameters -  question to ask, lower limit of the input, upper limit of the inputs
 def check_input(question, lower, upper):
     while True:
@@ -17,7 +18,7 @@ def view_jobs(jobs):
         print(f"{'Job Title':<20} {'Category':<20} {'Company':<15} {'Job Type':<20} {'Min Education':<15} {'Exp Req':<10}")
         #Displays index of each job in the list(1 to n) and the details of each job in the list
         for i, job in enumerate(jobs, start=1):
-            print(f"{i}) {job.title:<20} {job.category:<20} {job.company:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
+            print(f"{i}) {job.title:<20} {job.category:<20} {job.company.name:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
         print("To filter jobs, enter -1.")
         option = check_input("Enter the job number to view details, or 0 to go back: ", -1, len(jobs))
 
@@ -34,11 +35,11 @@ def view_jobs(jobs):
             job = jobs[option - 1]
             print(f"Job Title: {job.title}")
             print(f"Category: {job.category}")
-            print(f"Pay: {job.pay}")
+            print(f"Pay: {job.min_pay} to {job.max_pay}")
             print(f"Job Type: {job.job_type}")
             print(f"Min Education: {job.min_education}")
             print(f"Years of Experience required: {job.exp_required}")
-            print(f"Company: {job.company}")
+            print(f"Company: {job.company.name}")
             print(f"Technical skills required: {', '.join(job.tech_skills)}")
             print(f"Managerial skills required: {', '.join(job.mgr_skills)}")
             print(f"Additional Job Description: {job.description}")
@@ -53,33 +54,33 @@ def filter_jobs(jobs):
     print("2) Filter by Job Type")
     print("3) Filter by Years Exp")
     print("4) Filter by Pay")
-    option = check_input("Enter filter option: ", 1, 4) #Check input for valid option
+    f_option = check_input("Enter filter option: ", 1, 4) #Check input for valid option
 
     filtered_jobs = [] #Initialise empty list to store filtered jobs
 
     #If user selects option 1, filter by category
-    if option == 1:
+    if f_option == 1:
         category = input("Enter category (e.g., Cybersecurity, Software Engineering, A.I & Data Science): ").strip()
         for job in jobs:
             if job.category == category:
                 filtered_jobs.append(job)
 
     #If user selects option 2, filter by job type
-    elif option == 2:
+    elif f_option == 2:
         job_type = input("Enter job type (e.g., Full Time (Senior), Full Time (Junior), Part Time): ").strip()
         for job in jobs:
             if job.job_type == job_type:
                 filtered_jobs.append(job)
 
     #If user selects option 3, filter by years of experience
-    elif option == 3:
+    elif f_option == 3:
         years_exp = int(input("Enter years of experience: ").strip())
         for job in jobs:
             if int(job.exp_required) <= years_exp:
                 filtered_jobs.append(job)
 
     #If user selects option 4, filter by pay
-    elif option == 4:
+    elif f_option == 4:
         pay = int(input("Enter minimum pay: ").strip())
         for job in jobs:
             min_pay = int(job.pay.split(' to ')[0])  # Assumes format like "5000 to 7000"
@@ -96,8 +97,8 @@ def login_system():
     #Login system(Includes admin, company and jobseeker)
     while True:
         print("Enter username and password to login.")
-        userInput = input("Enter username: ").strip()
-        passwordInput = input("Enter password: ").strip()
+        userInput = input("Enter username: ")
+        passwordInput = getpass.getpass("Enter password: ")
         #Check if the username and password belongs to an admin, company or jobseeker
         with open("users.txt", "r") as file:
             for line in file:
@@ -125,8 +126,138 @@ def login_system():
                         print("Welcome Jobseeker!")
                         jobseeker(username)
                         break
-                    #If the username and password do not match, ask the user for input again
-            print("Invalid username or password. Please try again.")
+            #If the username and password do not match, ask the user for input again
+            if username != userInput or password != passwordInput:
+                print("Invalid username or password. Please try again.")
+            else:
+                break
+
+def admin():
+    #Admin menu
+    while True:
+        print("Admin Menu")
+        print("1) View all users")
+        print("2) Add new user")
+        print("3) Remove user")
+        print("4) Exit")
+        
+        a_option = check_input("Enter option: ", 1, 4)
+
+        #If user picks option 1, view all user accounts
+        if a_option == 1:
+            #Prints header for table
+            print("User Accounts:")
+            #Reads the users.txt file and prints the details of each user
+            with open("users.txt", "r") as file:
+                for line in file:
+                    line = line.strip()
+                    #If the line is empty, skip it
+                    if line == "":
+                        continue
+                    #Splits the line into parts using ',' as delimiter
+                    parts = line.split(",")
+                    #If the number of parts is less than 3, skip it
+                    if len(parts) < 3:
+                        continue
+                    #Assigns the parts to variables
+                    username = parts[0].strip()
+                    password = parts[1].strip()
+                    user_type = parts[2].strip()
+                    #Prints details in formatted table
+                    print(f"Username: {username}, Password: {password}, User Type: {user_type}")
+
+        #If user picks option 2, add new user
+        elif a_option == 2:
+            #Input new user details(username, password, user type)
+            while True:
+                new_username = input("Enter username: ")
+                existing_user = False
+                #Checks if username already exists
+                with open("users.txt", "r") as file:
+                    for line in file:
+                        line = line.strip()
+                        if line == "":
+                            continue
+                        parts = line.split(",")
+                        if len(parts) < 3:
+                            continue
+                        username = parts[0]
+                        #If the username already exists, ask user to choose a different username
+                        if username == new_username:
+                            print("Username already exists. Please choose a different username.")
+                            existing_user = True
+                            break
+                    #if username exists, asks the user to enter again
+                    if existing_user:
+                        continue
+                #If username is unique, ask for password and user type 
+                while True:       
+                    new_password = input("Enter password: ").strip()
+                    repeat_password = input("Repeat password: ").strip()
+                    #Checks if the password and repeat password match
+                    #If they do not match, ask user to enter again
+                    if new_password != repeat_password:
+                        print("Passwords do not match. Please try again.")
+                        continue
+                    #If password and repeat password match, break the loop
+                    elif new_password == repeat_password:
+                        break
+               #Asks for user type (admin or company or jobseeker)
+                while True:
+                    newuser_type = input("Enter user type (admin, company, jobseeker): ").strip()
+                    #Checks if user type exists
+                    #If it does not exist, ask user to enter again
+                    if newuser_type not in ["admin", "company", "jobseeker"]:
+                        print("Invalid user type. Please enter either admin, company or jobseeker.")
+                        continue
+                    #If user type exists, break the loop
+                    elif newuser_type in ["admin", "company", "jobseeker"]:
+                        break
+                #write the new user details to users.txt file
+                with open("users.txt", "a") as file:
+                    file.write(f"{new_username},{new_password},{newuser_type}\n")
+                print("User added successfully.")
+                #Ask admin if they want to add another user
+                another_user = input("Do you want to add another user? (y/n): ").strip().lower()
+                if another_user != "y":
+                    break
+        
+        #If user picks option 3, remove user
+        elif a_option == 3:
+            delete_user = input("Enter username to delete: ")
+            delete_found = False #Tracks if username is found
+            #Read the users.txt file and check if the username exists
+            with open("users.txt", "r") as f:
+                lines = f.readlines()
+            #If the username exists, remove the username from the file
+            with open("users.txt", "w") as f:
+                for line in lines:
+                    line = line.strip()
+                    if line == "":
+                        continue
+                    parts = line.split(",")
+                    if len(parts) < 3:
+                        continue
+                    username = parts[0].strip()
+                    #If the username does not match the user to be deleted, write it back to the file
+                    if username == delete_user:
+                        delete_found = True
+                    else:
+                        f.write(line + "\n")
+                
+                #If username is found, print success message
+                if delete_found:
+                    print(f"User '{delete_user}' deleted successfully.")
+                #Prints if username is not found
+                else:
+                    print(f"User '{delete_user}' not found.")
+                #Ask admin if they want to delete another user
+                delete_again = input("Do you want to delete another user? (y/n): ").lower()
+                if delete_again != "y":
+                    admin()
+        #Option 4, exit the admin menu
+        elif a_option == 4:
+            return
 
 class Job:
     #CompanyTitle, Category, Job Type, Min Education, Exp Required
@@ -233,7 +364,7 @@ def load_companies(filename):
             name = parts[0]
             url = parts[1]
             comp = parts[2]
-
+ 
             #Append it into a list while creating it as a class Company( )
             companies.append(Company(name.strip(), url.strip(), comp.strip(), description.strip()))
 
@@ -324,7 +455,7 @@ def load_jobs(filename, companies):
                 description = lines[2].strip()
 
             #Append it into a list while creating it as a class Job( )
-            jobs.append(Job(title.strip(), category.strip(), job_type.strip(), comp, min_education.strip(), exp_required.strip(), tech_skills, mgr_skills,min_pay, max_pay ,description.strip()))
+            jobs.append(Job(title.strip(), category.strip(), job_type.strip(), company, min_education.strip(), exp_required.strip(), tech_skills, mgr_skills,min_pay, max_pay ,description.strip()))
 
     #Finally, return the jobs array
     return jobs
@@ -638,7 +769,6 @@ def company(company):
             break
 
 #Start of main code
-
 print("@@@@ SCSU Jobs Portal @@@@")
 print("1. View Jobs")
 print("2. Login")
@@ -647,8 +777,10 @@ print("0. Exit")
 option = check_input("Enter option: ", 0, 2)
 
 if option == 1:
+    #Load companies from file
+    companies = load_companies("companyinfo.txt")
     #Load the jobs from the file
-    jobs = load_jobs("jobs.txt")
+    jobs = load_jobs("jobs.txt", companies)
     view_jobs(jobs)
 
 elif option == 2:
