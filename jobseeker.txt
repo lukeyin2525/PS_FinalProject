@@ -1,6 +1,6 @@
-user1,Jonathan,johnjohn@gmail.com,Diploma,25,5
+jsuser1,Jonathan,johnjohn@gmail.com,Diploma,25,5
 Python,Java,C++;
 Hi, I am Jonathan.
-Application: Engineer,comp2,Pending
-Application: Title2, comp2,Pending
+Application: Engineer,comp2,Approved
+Application: Title2,comp2,Pending
 -----

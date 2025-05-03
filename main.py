@@ -386,6 +386,21 @@ def find_company(user, array):
     #If company is not found, return -1
     return -1
 
+def find_jobseeker(user, array):
+
+    #Keep a record of which index we are at
+    index = 0
+
+    #Go through the array and see which username value matches
+    for jobseeker in array:
+        if user.strip() == jobseeker.username.strip():
+            return index
+        else:
+            index += 1
+    
+    #If company is not found, return -1
+    return -1
+
 def save_companies(filename, companies):
     #Open the file and rewrite
     with open(filename, 'w') as file:
@@ -535,19 +550,20 @@ def load_jobseekers(filename):
 
 def link_applications(jobseekers, jobs):
     for jobseeker in jobseekers:
-# Create a new list to store linked applications
         linked_applications = []
         
         for application in jobseeker.applications:
             linked = False
             
             for job in jobs:
-                # Check if job.company is a string or Company object
-                company_name = job.company.name if hasattr(job.company, 'name') else job.company
                 
-                if job.title.strip() == application.job.strip() and company_name.strip() == application.company.strip():
+                # Case-insensitive comparison with stripped whitespace
+                if job.title.strip().lower() == application.job.strip().lower() and \
+                   (job.company.strip().lower() == application.company.strip().lower() if isinstance(job.company, str) else \
+                   job.company.username.strip().lower() == application.company.strip().lower()):
+                    
                     new_app = Application(jobseeker, job, job.company)
-                    new_app.status = application.status if hasattr(application, 'status') else "Pending"
+                    new_app.status = application.status
                     
                     linked_applications.append(new_app)
                     job.add_applicant(new_app)
@@ -585,12 +601,9 @@ def save_jobseekers(filename, jobseekers):
             for application in jobseeker.applications:
                 file.write("Application: ")
                 # Check if job is a string or an object
-                job_title = ""
-                if isinstance(application.job, str):
-                    job_title = application.job
-                else:
-                    job_title = application.job.title
-                file.write(f"{job_title},{application.company},{application.status}\n")
+                job_title = application.job.title if hasattr(application.job, 'title') else application.job
+                company_username = application.company.username if hasattr(application.company, 'username') else application.company
+                file.write(f"{job_title},{company_username},{application.status}\n")
             file.write("-----\n")
         
         print("Loading................")
@@ -738,19 +751,25 @@ def company(company):
                     # Strip whitespace and append the line as a whole
                     technical.append(line.strip().split(","))
 
+            ts = []
+            ms = []
+            ind = 0
             # Now "technical" contains lists of skills, not characters
             if category == "Software Engineering":
-                for i, skill in enumerate(technical[0]):
-                    print(f"{i+1}) {skill}")
+                ind = 0
             elif category == "Cybersecurity":
-                for i, skill in enumerate(technical[1]):
-                    print(f"{i+1}) {skill}")
+                ind = 1
             elif category == "AI & Data Science":
-                for i, skill in enumerate(technical[2]):
-                    print(f"{i+1}) {skill}")
-            tech_skills = input("Enter technical skills (comma separated): ").strip()
-            tech_skills = tech_skills.split(",")
-
+                ind = 2
+            for i, skill in enumerate(technical[ind]):
+                print(f"{i+1}) {skill}")
+                tech_skills = input("Enter technical skills (comma separated): ").strip()
+                tech_skills = tech_skills.split(",")
+                for tech_skill in tech_skills:
+                    for i in range(len(technical[0])):
+                        if tech_skill.strip() == technical[ind][i]:
+                            ts.append(technical[ind][i])
+            
             if job_type == "Full time (Senior)":
                 mgr = []
                 with open("managerial.txt","r") as file:
@@ -775,6 +794,121 @@ def company(company):
             save_jobs("jobs.txt", jobs)
         elif option == 4:
             break
+
+def jobseeker(username):
+    companies = load_companies("companyinfo.txt")
+    jobs = load_jobs("jobs.txt", companies) 
+    jobseekers = load_jobseekers("jobseeker.txt")
+        
+    link_applications(jobseekers, jobs)
+
+    while True:
+        print("1) Edit Profile")
+        print("2) View Jobs")
+        print("3) View Applications")
+        print("4) Exit")
+        option = check_input("Enter option: ", 1, 4)
+        
+        index = find_jobseeker(username, jobseekers)
+        if index == -1:
+            print("The jobseeker does not exist.")
+            continue
+
+        if option == 1:
+
+            print(f"Jobseeker Name : {jobseekers[index].name}")
+            print(f"Jobseeker Email: {jobseekers[index].email}")
+            print(f"Jobseeker Education: {jobseekers[index].education}")
+            print(f"Jobseeker Age: {jobseekers[index].age}")
+            print(f"Jobseeker Years Experience: {jobseekers[index].years_experience}")
+            print(f"Jobseeker Technical Skills: {jobseekers[index].tech_skills}")
+            print(f"Jobseeker Managerial Skills: {jobseekers[index].mgr_skills}")
+            print(f"Jobseeker Description: {jobseekers[index].description}")
+
+            answer = check_input("Enter 1 to edit, or 0 to return back to menu: ", 0, 1)
+
+            if answer == 1:
+                #Ask the user for new descriptions
+                new_name = input("Enter the new jobseeker name: ")
+                new_email = input("Enter the new jobseeker email: ")
+                new_education = input("Enter the new jobseeker education: ")
+                new_age = input("Enter the new jobseeker age: ")
+                new_years_experience = input("Enter the new jobseeker years experience: ")
+                new_tech_skills = input("Enter the new jobseeker technical skills: ")
+                new_mgr_skills = input("Enter the new jobseeker managerial skills: ")
+                new_description = input("Enter the new jobseeker description: ")
+
+                jobseekers[index].name = new_name
+                jobseekers[index].email = new_email
+                jobseekers[index].education = new_education
+                jobseekers[index].age = new_age
+                jobseekers[index].years_experience = new_years_experience
+                jobseekers[index].tech_skills = new_tech_skills
+                jobseekers[index].mgr_skills = new_mgr_skills
+                jobseekers[index].description = new_description
+
+                save_jobseekers("jobseeker.txt", jobseekers)
+            elif answer == 0:
+                continue
+        elif option == 2:
+            print(f"{'Job Title':<20} {'Category':<20} {'Company':<15} {'Job Type':<20} {'Min Education':<15} {'Exp Req':<10}")
+            #Displays index of each job in the list(1 to n) and the details of each job in the list
+            for i, job in enumerate(jobs, start=1):
+                print(f"{i}) {job.title:<20} {job.category:<20} {job.company.name:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
+            option = check_input("Enter the job number to view details, or 0 to go back: ", 0, len(jobs))
+
+            #If user enters 0, exit the loop
+            if option == 0:
+                break
+            else:
+                job = jobs[option - 1]
+                print(f"Job Title: {job.title}")
+                print(f"Category: {job.category}")
+                print(f"Pay: {job.min_pay} to {job.max_pay}")
+                print(f"Job Type: {job.job_type}")
+                print(f"Min Education: {job.min_education}")
+                print(f"Years of Experience required: {job.exp_required}")
+                print(f"Company: {job.company.name}")
+                print(f"Technical skills required: {', '.join(job.tech_skills)}")
+                print(f"Managerial skills required: {', '.join(job.mgr_skills)}")
+                print(f"Additional Job Description: {job.description}")
+                print(f"Company Description: {job.company.description}")
+                print(f"Company URL: {job.company.url}")
+                
+                answer = check_input("Enter 1 to apply for this job, or 0 to go back: ", 0, 1)
+                if answer == 1:
+                    #Check if the jobseeker has already applied for this job
+                    for application in jobseekers[index].applications:
+                        if application.job.title == job.title and application.company.username == job.company.username:
+                            print("You have already applied for this job.")
+                            break
+                    else:
+                        #If not, apply for the job
+                        jobseekers[index].apply_for_job(job)
+                        save_jobseekers("jobseeker.txt", jobseekers)
+                        print("You have successfully applied for this job.")
+                elif answer == 0:
+                    continue
+        elif option == 3:
+            print(f"{'Job Title':<20} {'Company':<15} {'Status':<10}")
+            #Displays index of each job in the list(1 to n) and the details of each job in the list
+            for i, application in enumerate(jobseekers[index].applications, start=1):
+                job_title = application.job.title if hasattr(application.job, 'title') else application.job
+                company_username = application.company.username if hasattr(application.company, 'username') else application.company
+                print(f"{i}) {job_title:<20} {company_username:<15} {application.status:<10}")
+            option = check_input("Enter the application number to view details, or 0 to go back: ", 0, len(jobseekers[index].applications))
+
+            #If user enters 0, exit the loop
+            if option == 0:
+                break
+            else:
+                application = jobseekers[index].applications[option - 1]
+                job_title = application.job.title if hasattr(application.job, 'title') else application.job
+                company_username = application.company.username if hasattr(application.company, 'username') else application.company
+                print(f"Job Title: {job_title}")
+                print(f"Company: {company_username}")
+                print(f"Job Type: {application.job.job_type}")
+                print(f"Status: {application.status}")
 
 #Start of main code
 print("@@@@ SCSU Jobs Portal @@@@")
