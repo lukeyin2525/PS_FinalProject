@@ -40,8 +40,14 @@ def view_jobs(jobs):
             print(f"Min Education: {job.min_education}")
             print(f"Years of Experience required: {job.exp_required}")
             print(f"Company: {job.company.name}")
-            print(f"Technical skills required: {', '.join(job.tech_skills)}")
-            print(f"Managerial skills required: {', '.join(job.mgr_skills)}")
+
+            #If tech skills is a string, split into a list.
+            tech_skills = job.tech_skills.split(",") if job.tech_skills else [job.tech_skills]
+            mgr_skills = job.mgr_skills.split(",") if job.mgr_skills else [job.mgr_skills]
+
+            print(f"Technical skills required: {', '.join(tech_skills)}")
+            print(f"Managerial skills required: {', '.join(mgr_skills)}")
+
             print(f"Additional Job Description: {job.description}")
             print(f"Company Description: {job.company.description}")
             print(f"Company URL: {job.company.url}")
@@ -601,8 +607,8 @@ def save_jobseekers(filename, jobseekers):
             file.write(f"{jobseeker.username},{jobseeker.name},{jobseeker.email},{jobseeker.education},{jobseeker.age},{jobseeker.years_experience}\n")
             
             # Ensure tech_skills and mgr_skills are lists and join them
-            tech_skills = jobseeker.tech_skills if isinstance(jobseeker.tech_skills, list) else [jobseeker.tech_skills]
-            mgr_skills = jobseeker.mgr_skills if isinstance(jobseeker.mgr_skills, list) else [jobseeker.mgr_skills]
+            tech_skills = jobseeker.tech_skills if isinstance(jobseeker.tech_skills, list) else [jobseeker.tech_skills.split(",")]
+            mgr_skills = jobseeker.mgr_skills if isinstance(jobseeker.mgr_skills, list) else [jobseeker.mgr_skills.split(",")]
             
             file.write(f"{','.join(tech_skills)};{','.join(mgr_skills)}\n")
             file.write(f"{jobseeker.description.strip()}\n")
