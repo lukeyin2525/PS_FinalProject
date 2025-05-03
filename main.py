@@ -15,10 +15,10 @@ def check_input(question, lower, upper):
 def view_jobs(jobs):
     while True:
         #Display the job listings in a formatted table, aligning the columns
-        print(f"{'Job Title':<20} {'Category':<20} {'Company':<15} {'Job Type':<20} {'Min Education':<15} {'Exp Req':<10}")
+        print(f"{'Job Title':<20} {'Category':<20} {'Company':<20} {'Job Type':<20} {'Min Education':<20} {'Exp Req':<20}")
         #Displays index of each job in the list(1 to n) and the details of each job in the list
         for i, job in enumerate(jobs, start=1):
-            print(f"{i}) {job.title:<20} {job.category:<20} {job.company.name:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
+            print(f"{i}) {job.title:<20} {job.category:<20} {job.company.name:<20} {job.job_type:<20} {job.min_education:<20} {job.exp_required:<201}")
         print("To filter jobs, enter -1.")
         option = check_input("Enter the job number to view details, or 0 to go back: ", -1, len(jobs))
 
@@ -81,10 +81,9 @@ def filter_jobs(jobs):
 
     #If user selects option 4, filter by pay
     elif f_option == 4:
-        pay = int(input("Enter minimum pay: ").strip())
+        pay = input("Enter minimum pay: ").strip()
         for job in jobs:
-            min_pay = int(job.pay.split(' to ')[0])  # Assumes format like "5000 to 7000"
-            if min_pay >= pay:
+            if job.min_pay >= pay:
                 filtered_jobs.append(job)
 
     #Prints the filtered jobs
