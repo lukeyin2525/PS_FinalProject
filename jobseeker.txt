@@ -1,6 +1,6 @@
-user1,Jonathan,johnjohn@gmail.com,Third Year,25,5
-TechSkills,Mgr_Skills
-Description
-Application: Title,Job2Company,Pending
-Application: Title, comp2,Pending
+jsuser1,Jonathan,johnjohn@gmail.com,Diploma,25,5
+Python,Java,C++;
+Hi, I am Jonathan.
+Application: Engineer,comp2, Approved
+Application: Title2,comp2,Pending
 -----
