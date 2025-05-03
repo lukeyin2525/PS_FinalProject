@@ -632,7 +632,8 @@ def company(company):
             categories = ["Cybersecurity", "Software Engineering", "AI & Data Science"]
             print("Category: 1) Cybersecurity, 2) Software Engineering 3) AI & Data Science")
             category = categories[check_input("Enter a number to choose the category.",1,3)-1]
-            Min_Pay = input("Enter your minimum pay: ")
+            min_pay = input("Enter your minimum pay: ")
+
         elif option == 4:
             break
 
