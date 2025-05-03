@@ -269,8 +269,8 @@ class Job:
             self.exp_required = exp_required
             self.tech_skills = tech_skills
             self.mgr_skills = mgr_skills
-            self.min_pay = min_pay
-            self.max_pay  = max_pay
+            self.min_pay = int(min_pay)
+            self.max_pay  = int(max_pay)
             self.description = description.strip()
             self.applicants = []
     
@@ -578,13 +578,22 @@ def save_jobs(filename, jobs):
     with open(filename, 'w') as file:
         for job in jobs:
             company_username = job.company.username if hasattr(job.company, 'username') else job.company
-            file.write(f"{job.title},{job.category},{job.job_type},{company_username},{job.min_education},{job.exp_required}, {job.min_pay}, {job.max_pay}\n")
-            file.write(f"{','.join(job.tech_skills)};{','.join(job.mgr_skills)}\n")
-            file.write(f"{job.description.strip()}\n")
+            file.write(f"{job.title},{job.category},{job.job_type},{company_username},{job.min_education},{job.exp_required},{job.min_pay},{job.max_pay}\n")
+            
+            # Correctly format skills - join the list items with commas
+            if isinstance(job.tech_skills, list):
+                tech_skills_str = ",".join(job.tech_skills)
+            else:
+                tech_skills_str = job.tech_skills
+                
+            if isinstance(job.mgr_skills, list):
+                mgr_skills_str = ",".join(job.mgr_skills)
+            else:
+                mgr_skills_str = job.mgr_skills
+                
+            file.write(f"{tech_skills_str};{mgr_skills_str}\n")
+            file.write(f"{job.description}\n")
             file.write("-----\n")
-        
-        print("Loading................")
-        print("File has been successfully updated.")
 
 def save_jobseekers(filename, jobseekers):
     with open(filename, 'w') as file:
@@ -908,6 +917,8 @@ def jobseeker(username):
                 print(f"Company: {company_username}")
                 print(f"Job Type: {application.job.job_type}")
                 print(f"Status: {application.status}")
+        else:
+            break
 
 #Start of main code
 print("@@@@ SCSU Jobs Portal @@@@")
