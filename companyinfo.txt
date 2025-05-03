@@ -1,8 +1,8 @@
 ABC Company,www.abcco.com,comp1
 abc company description
 -----
-weeheewoohoo,asfadf,comp2
-adfafdasfdasfasdfdasfdasfasdf
+ABC Company,abccompany.com,comp2
+We are ABC Company!
 -----
 0,0,comp3
 0
