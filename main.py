@@ -83,7 +83,7 @@ def filter_jobs(jobs):
     elif f_option == 4:
         pay = input("Enter minimum pay: ").strip()
         for job in jobs:
-            if job.min_pay >= pay:
+            if int(job.min_pay) >= pay:
                 filtered_jobs.append(job)
 
     #Prints the filtered jobs
