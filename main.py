@@ -942,10 +942,10 @@ def jobseeker(username):
             elif answer == 0:
                 continue
         elif option == 2:
-            print(f"{'Job Title':<20} {'Category':<20} {'Company':<15} {'Job Type':<20} {'Min Education':<15} {'Exp Req':<10}")
+            print(f"{"":<4}{'Job Title':<20} {'Category':<20} {'Company':<15} {'Job Type':<20} {'Min Education':<15} {'Exp Req':<10}")
             #Displays index of each job in the list(1 to n) and the details of each job in the list
             for i, job in enumerate(jobs, start=1):
-                print(f"{i}) {job.title:<20} {job.category:<20} {job.company.name:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
+                print(f"{i:<4}) {job.title:<20} {job.category:<20} {job.company.name:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
             option = check_input("Enter the job number to view details, or 0 to go back: ", 0, len(jobs))
 
             #If user enters 0, exit the loop
@@ -985,12 +985,12 @@ def jobseeker(username):
         elif option == 3:
             loop = True
             while loop == True:
-                print(f"{'Job Title':<20} {'Company':<15} {'Status':<10}")
+                print(f"{"":<4}{'Job Title':<20} {'Company':<15} {'Status':<10}")
                 #Displays index of each job in the list(1 to n) and the details of each job in the list
                 for i, application in enumerate(jobseekers[index].applications, start=1):
                     job_title = application.job.title if hasattr(application.job, 'title') else application.job
                     company_username = application.company.username if hasattr(application.company, 'username') else application.company
-                    print(f"{i}) {job_title:<20} {company_username:<15} {application.status:<10}")
+                    print(f"{i:<4}) {job_title:<20} {company_username:<15} {application.status:<10}")
                 option = check_input("Enter the application number to view details, or 0 to go back: ", 0, len(jobseekers[index].applications))
 
                 if option == 0:
