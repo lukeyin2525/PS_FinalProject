@@ -1,4 +1,28 @@
 import getpass
+
+#Start of main code
+def main_menu():
+    print("@@@@ SCSU Jobs Portal @@@@")
+    print("1. View Jobs")
+    print("2. Login")
+    print("0. Exit")
+
+    option = check_input("Enter option: ", 0, 2)
+
+    if option == 1:
+        #Load companies from file
+        companies = load_companies("companyinfo.txt")
+        #Load the jobs from the file
+        jobs = load_jobs("jobs.txt", companies)
+        view_jobs(jobs)
+
+    elif option == 2:
+        login_system()
+
+    elif option == 0:
+        print("Exiting the application. Thank you for using SCSU Jobs Portal.")
+        exit()
+
 #Function to check input, takes 3 parameters -  question to ask, lower limit of the input, upper limit of the inputs
 def check_input(question, lower, upper):
     while True:
@@ -22,9 +46,9 @@ def view_jobs(jobs):
         print("To filter jobs, enter -1.")
         option = check_input("Enter the job number to view details, or 0 to go back: ", -1, len(jobs))
 
-        #If user enters 0, exit the loop
+        #If user enters 0, goes back to the main menu
         if option == 0:
-            break
+            main_menu()
 
         #If user enters -1, call the filter_jobs function to filter jobs
         elif option == -1:
@@ -305,7 +329,7 @@ def admin():
                     break
         #Option 4, exit the admin menu
         elif a_option == 4:
-            return
+            main_menu()
 
 class Job:
     #CompanyTitle, Category, Job Type, Min Education, Exp Required
@@ -971,24 +995,5 @@ def jobseeker(username):
                 print(f"Status: {application.status}")
         else:
             break
-
-#Start of main code
-print("@@@@ SCSU Jobs Portal @@@@")
-print("1. View Jobs")
-print("2. Login")
-print("0. Exit")
-
-option = check_input("Enter option: ", 0, 2)
-
-if option == 1:
-    #Load companies from file
-    companies = load_companies("companyinfo.txt")
-    #Load the jobs from the file
-    jobs = load_jobs("jobs.txt", companies)
-    view_jobs(jobs)
-
-elif option == 2:
-    login_system()
-
-elif option == 0:
-    print("Exiting the application. Thank you for using SCSU Jobs Portal.")
+if __name__ == "__main__":
+    main_menu()
