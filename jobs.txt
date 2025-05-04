@@ -1,4 +1,12 @@
-Engineer,Cybersecurity,Full Time Senior,comp2,Diploma,2, 3000, 6000
-Python, Java, C++ ; Lifecyle Management,ERP Software Implementation,NIST Framework
+Engineer,Cybersecurity,Full Time Senior,comp2,Diploma,2,3000,6000
+Python, Java, C++;Lifecyle Management,ERP Software Implementation,NIST Framework
 description
+-----
+Developer,Software Engineering,Full time(senior),comp2,Bachelors,5,5000,7000
+;
+Hello Hello, new job alert!
+-----
+Pen Tester,Cybersecurity,Full Time (Junior),comp2,Bachelors,2,5000,8000
+SQL,IDS/IPS,Log Analysis,Windows Hardening;
+SECURITY SECURITY
 -----

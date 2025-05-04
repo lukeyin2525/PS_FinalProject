@@ -418,29 +418,14 @@ def load_companies(filename):
     #Finally, return the companies array
     return companies
 
-def find_company(user, array):
+def find_user(user, array):
 
     #Keep a record of which index we are at
     index = 0
 
     #Go through the array and see which username value matches
-    for comp in array:
-        if user.strip() == comp.username.strip():
-            return index
-        else:
-            index += 1
-    
-    #If company is not found, return -1
-    return -1
-
-def find_jobseeker(user, array):
-
-    #Keep a record of which index we are at
-    index = 0
-
-    #Go through the array and see which username value matches
-    for jobseeker in array:
-        if user.strip() == jobseeker.username.strip():
+    for u in array:
+        if user.strip() == u.username.strip():
             return index
         else:
             index += 1
@@ -675,8 +660,7 @@ def company(company):
         jobseekers = load_jobseekers("jobseeker.txt")
         
         link_applications(jobseekers, jobs)
-        
-        index = find_company(company, companies)
+        index = find_user(company, companies)
 
         #Ask the users for the first option
         print(" 1) Edit Company Profile")
@@ -730,7 +714,7 @@ def company(company):
                     job_index[i] = job
                     i+=1
             
-            if len(job_index) == 0:
+            if len(job_index) < 1:
                 print("No jobs posted by the company.")
                 continue
             else:
@@ -750,44 +734,47 @@ def company(company):
                         if app.status != "Rejected":
                             applications.append(app)
 
-                    print(f"There are {len(applications)} applicants for this job.")
-                    option = check_input("Enter 1 to view applicants, or 0 to exit",0,1)
+                    if len(applications) == 0:
+                        print("No applicants for this job.")
+                    else:
+                        print(f"There are {len(applications)} applicants for this job.")
+                        option = check_input("Enter 1 to view applicants, or 0 to exit",0,1)
 
-                    if option == 1:
-                        #Placeholders for the table
-                        print(f"{"":<4} {"Name":<20} {"Age":<15} {"Education":<20} {"Years Experience":<25}")
+                        if option == 1:
+                            #Placeholders for the table
+                            print(f"{"":<4} {"Name":<20} {"Age":<15} {"Education":<20} {"Years Experience":<25}")
 
-                        # Print each applicant
-                        for index, applicant in enumerate(applications, 1):
-                            print(f"{index}){'':<2} {applicant.jobseeker.name :<20} {applicant.jobseeker.age :<15} {applicant.jobseeker.education:<20} {applicant.jobseeker.years_experience:<25}")
+                            # Print each applicant
+                            for index, applicant in enumerate(applications, 1):
+                                print(f"{index}){'':<2} {applicant.jobseeker.name :<20} {applicant.jobseeker.age :<15} {applicant.jobseeker.education:<20} {applicant.jobseeker.years_experience:<25}")
 
-                        # Ask user for input AFTER listing all applicants
-                        option = check_input("Enter the number of applicant to view details, or 0 to exit", 0, len(applications))
-                            
-                        if option == 0:
-                            continue
-                        else:
-                            #Subtract -1 from option, since array index starts at 0
-                            application = applications[option-1]
-                            print(f"Application Status: {application.status}")
-                            print(f"Name: {application.jobseeker.name}")
-                            print(f"Education: {application.jobseeker.education}")
-                            print(f"Email: {application.jobseeker.email}")
-                            print(f"Age: {application.jobseeker.age}")
-                            print(f"Years Expereince: {application.jobseeker.years_experience}")
-                            print(f"Technical Skills: {application.jobseeker.tech_skills}")
-                            print(f"Managerial Skills: {application.jobseeker.mgr_skills}")
-                            print(f"Additional Description: {application.jobseeker.description}")
-
-                            approval = check_input("Enter 1 to approve this applicant for interview, -1 to reject, 0 to go back", -1,1)
-
-                            if approval == -1:
-                                application.update_status("Rejected")
-                            elif approval == 1:
-                                application.update_status("Approved")
-                            save_jobseekers("jobseeker.txt",jobseekers)
-                            if approval == 0:
+                            # Ask user for input AFTER listing all applicants
+                            option = check_input("Enter the number of applicant to view details, or 0 to exit", 0, len(applications))
+                                
+                            if option == 0:
                                 continue
+                            else:
+                                #Subtract -1 from option, since array index starts at 0
+                                application = applications[option-1]
+                                print(f"Application Status: {application.status}")
+                                print(f"Name: {application.jobseeker.name}")
+                                print(f"Education: {application.jobseeker.education}")
+                                print(f"Email: {application.jobseeker.email}")
+                                print(f"Age: {application.jobseeker.age}")
+                                print(f"Years Expereince: {application.jobseeker.years_experience}")
+                                print(f"Technical Skills: {application.jobseeker.tech_skills}")
+                                print(f"Managerial Skills: {application.jobseeker.mgr_skills}")
+                                print(f"Additional Description: {application.jobseeker.description}")
+
+                                approval = check_input("Enter 1 to approve this applicant for interview, -1 to reject, 0 to go back", -1,1)
+
+                                if approval == -1:
+                                    application.update_status("Rejected")
+                                elif approval == 1:
+                                    application.update_status("Approved")
+                                save_jobseekers("jobseeker.txt",jobseekers)
+                                if approval == 0:
+                                    continue
         elif option == 3:
             title = input("Enter a job title: ")
             categories = ["Cybersecurity", "Software Engineering", "AI & Data Science"]
@@ -819,30 +806,46 @@ def company(company):
                 ind = 2
             for i, skill in enumerate(technical[ind]):
                 print(f"{i+1}) {skill}")
-                tech_skills = input("Enter technical skills (comma separated): ").strip()
-                tech_skills = tech_skills.split(",")
+            tech_skills = input("Enter technical skills (comma separated): ").strip()
+            tech_skills = tech_skills.split(",")
+            try:
                 for tech_skill in tech_skills:
-                    for i in range(len(technical[0])):
-                        if tech_skill.strip() == technical[ind][i]:
+                    for i in range(len(technical[ind])):
+                        if technical[ind][int(tech_skill)-1].strip() == technical[ind][i]:
                             ts.append(technical[ind][i])
+            except ValueError:
+                print("Invalid input. Please enter a number corresponding to the skill.")
+                continue
             
-            if job_type == "Full time (Senior)":
+            normalized_job_type = job_type.lower().replace(" ", "")
+            if "fulltime(senior)" in normalized_job_type or "fulltimesenior" in normalized_job_type:
                 mgr = []
                 with open("managerial.txt","r") as file:
                     lines = file.readlines()
                     for line in lines:
-                        mgr.append(line.strip().split(","))
-                for i, skill in enumerate(mgr[0]):
+                        skills = line.strip().split(",")
+                        for skill in skills:
+                            mgr.append(skill)
+                for i, skill in enumerate(mgr):
                     print(f"{i+1}) {skill}")
                 mgr_skills = input("Enter managerial skills (comma separated): ").strip()
                 mgr_skills = mgr_skills.split(",")
+
+                try:
+                    for mgr_skill in mgr_skills:
+                        for i in range(len(mgr)):
+                            if mgr[int(mgr_skill.strip())] == mgr[i]:
+                                ms.append(mgr[i])
+                except ValueError:
+                    print("Invalid input. Please enter a number corresponding to the skill.")
+                    continue
             else:
                 mgr_skills = []
 
             job_desc = input("Enter job description: ").strip()
 
             #Create a new job object and add it to the company
-            new_job = Job(title, category, job_type, companies[index], min_education, exp_required, tech_skills, mgr_skills, min_pay, max_pay, job_desc)
+            new_job = Job(title, category, job_type, companies[index], min_education, exp_required, ts, ms, min_pay, max_pay, job_desc)
 
             companies[index].add_job(new_job)
             jobs.append(new_job)
@@ -865,7 +868,7 @@ def jobseeker(username):
         print("4) Exit")
         option = check_input("Enter option: ", 1, 4)
         
-        index = find_jobseeker(username, jobseekers)
+        index = find_user(username, jobseekers)
         if index == -1:
             print("The jobseeker does not exist.")
             continue
