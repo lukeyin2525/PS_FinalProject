@@ -271,37 +271,38 @@ def admin():
         
         #If user picks option 3, remove user
         elif a_option == 3:
-            delete_user = input("Enter username to delete: ")
-            delete_found = False #Tracks if username is found
-            #Read the users.txt file and check if the username exists
-            with open("users.txt", "r") as f:
-                lines = f.readlines()
-            #If the username exists, remove the username from the file
-            with open("users.txt", "w") as f:
-                for line in lines:
-                    line = line.strip()
-                    if line == "":
-                        continue
-                    parts = line.split(",")
-                    if len(parts) < 3:
-                        continue
-                    username = parts[0].strip()
-                    #If the username does not match the user to be deleted, write it back to the file
-                    if username == delete_user:
-                        delete_found = True
+            while True:
+                delete_user = input("Enter username to delete: ")
+                delete_found = False #Tracks if username is found
+                #Read the users.txt file and check if the username exists
+                with open("users.txt", "r") as f:
+                    lines = f.readlines()
+                #If the username exists, remove the username from the file
+                with open("users.txt", "w") as f:
+                    for line in lines:
+                        line = line.strip()
+                        if line == "":
+                            continue
+                        parts = line.split(",")
+                        if len(parts) < 3:
+                            continue
+                        username = parts[0].strip()
+                        #If the username does not match the user to be deleted, write it back to the file
+                        if username == delete_user:
+                            delete_found = True
+                        else:
+                            f.write(line + "\n")
+                    
+                    #If username is found, print success message
+                    if delete_found:
+                        print(f"User '{delete_user}' deleted successfully.")
+                    #Prints if username is not found
                     else:
-                        f.write(line + "\n")
-                
-                #If username is found, print success message
-                if delete_found:
-                    print(f"User '{delete_user}' deleted successfully.")
-                #Prints if username is not found
-                else:
-                    print(f"User '{delete_user}' not found.")
+                        print(f"User '{delete_user}' not found.")
                 #Ask admin if they want to delete another user
                 delete_again = input("Do you want to delete another user? (y/n): ").lower()
                 if delete_again != "y":
-                    admin()
+                    break
         #Option 4, exit the admin menu
         elif a_option == 4:
             return

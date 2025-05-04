@@ -2,4 +2,4 @@ admin1,Admin123,admin
 comp1,pass2025,company
 comp2,comp123,company
 jsuser1,JSuser123,jobseeker
-jsuser2,pass987,jobseeker
+jsuser2,JSuser345,jobseeker
