@@ -29,7 +29,7 @@ def check_input(question, lower, upper):
         try:
             choice = int(input(question))
             if choice < lower or choice > upper:
-                print("Please enter either 0, 1 or 2.")
+                print("Please enter from"+ f" {lower} to {upper}.")
             else:
                 return choice
         except:
