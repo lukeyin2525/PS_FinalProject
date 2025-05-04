@@ -18,7 +18,7 @@ def view_jobs(jobs):
         print(f"{'Job Title':<20} {'Category':<20} {'Company':<20} {'Job Type':<20} {'Min Education':<20} {'Exp Req':<20}")
         #Displays index of each job in the list(1 to n) and the details of each job in the list
         for i, job in enumerate(jobs, start=1):
-            print(f"{i}) {job.title:<20} {job.category:<20} {job.company.name:<20} {job.job_type:<20} {job.min_education:<20} {job.exp_required:<201}")
+            print(f"{i}) {job.title:<17} {job.category:<20} {job.company.name:<20} {job.job_type:<20} {job.min_education:<20} {job.exp_required:<201}")
         print("To filter jobs, enter -1.")
         option = check_input("Enter the job number to view details, or 0 to go back: ", -1, len(jobs))
 
@@ -52,6 +52,9 @@ def view_jobs(jobs):
             print(f"Company Description: {job.company.description}")
             print(f"Company URL: {job.company.url}")
             input("Enter 0 to go back: ")
+            #If user enters 0, exit the loop
+            if option == 0:
+                break
 
 #Filter jobs using sequential search
 def filter_jobs(jobs):
@@ -63,40 +66,79 @@ def filter_jobs(jobs):
     f_option = check_input("Enter filter option: ", 1, 4) #Check input for valid option
 
     filtered_jobs = [] #Initialise empty list to store filtered jobs
-
-    #If user selects option 1, filter by category
-    if f_option == 1:
-        category = input("Enter category (e.g., Cybersecurity, Software Engineering, A.I & Data Science): ").strip()
-        for job in jobs:
-            if job.category == category:
-                filtered_jobs.append(job)
-
-    #If user selects option 2, filter by job type
-    elif f_option == 2:
-        job_type = input("Enter job type (e.g., Full Time (Senior), Full Time (Junior), Part Time): ").strip()
-        for job in jobs:
-            if job.job_type == job_type:
-                filtered_jobs.append(job)
-
-    #If user selects option 3, filter by years of experience
-    elif f_option == 3:
-        years_exp = int(input("Enter years of experience: ").strip())
-        for job in jobs:
-            if int(job.exp_required) <= years_exp:
-                filtered_jobs.append(job)
-
-    #If user selects option 4, filter by pay
-    elif f_option == 4:
-        pay = int(input("Enter minimum pay: ").strip())
-        for job in jobs:
-            if int(job.min_pay) >= pay:
-                filtered_jobs.append(job)
-
-    #Prints the filtered jobs
-    print(f"{'Job Title':<20} {'Category':<20} {'Company':<15} {'Job Type':<20} {'Min Education':<15} {'Exp Req':<10}")
-    for i, job in enumerate(filtered_jobs, start=1):
-        print(f"{i}) {job.title:<20} {job.category:<20} {job.company.name:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
-
+    while True:
+        while True:
+            re_input = False
+            #If user selects option 1, filter by category
+            if f_option == 1:
+                category = input("Enter category (e.g., Cybersecurity, Software Engineering, A.I & Data Science): ").strip()
+                for job in jobs:
+                    if job.category == category:
+                        filtered_jobs.append(job)
+                    #If the catergory input is not valid, ask user for input again
+                    elif category not in ["Cybersecurity", "Software Engineering", "A.I & Data Science"]:
+                        print("Invalid category. Please enter a valid category.")
+                        re_input = True
+                if re_input != True:
+                    break
+            #If user selects option 2, filter by job type
+            elif f_option == 2:
+                job_type = input("Enter job type (e.g., Full Time (Senior), Full Time (Junior), Part Time): ").strip()
+                for job in jobs:
+                    if job.job_type == job_type:
+                        filtered_jobs.append(job)
+                    #If the input is not within parameter, ask user for input again
+                    elif job_type not in ["Full Time (Senior)", "Full Time (Junior)", "Part Time"]:
+                            print("Invalid Job Type. Please enter a valid job type.")
+                            re_input = True
+                if re_input != True:
+                    break                
+            #If user selects option 3, filter by years of experience
+            elif f_option == 3:
+                #If input is not an integer, ask user for input again
+                try:
+                    years_exp = int(input("Enter years of experience: ").strip())
+                    for job in jobs:
+                        if int(job.exp_required) <= years_exp:
+                            filtered_jobs.append(job)
+                        elif years_exp < 0:
+                            print("Invalid years of experience. Please enter a valid years of experience.")
+                            re_input = True
+                    if re_input != True:
+                        break
+                except ValueError:
+                    print("Please enter an integer.")   
+            #If user selects option 4, filter by pay
+            elif f_option == 4:
+                try:
+                    pay = int(input("Enter minimum pay: ").strip())
+                    for job in jobs:
+                        if int(job.min_pay) >= pay:
+                            filtered_jobs.append(job)
+                        elif pay < 0:
+                            print("Invalid pay. Please enter a valid pay.")
+                            re_input = True
+                    if re_input != True:
+                        break
+                except ValueError:
+                    print("Please enter an integer.")
+        if filtered_jobs:
+            #Filtered jobs header
+            print("Filtered Jobs:")
+            #Prints the filtered jobs in a formatted table
+            print(f"{'Job Title':<20} {'Category':<20} {'Company':<15} {'Job Type':<20} {'Min Education':<15} {'Exp Req':<10}")
+            for i, job in enumerate(filtered_jobs, start=1):
+                print(f"{i}) {job.title:<17} {job.category:<20} {job.company.name:<15} {job.job_type:<20} {job.min_education:<15} {job.exp_required:<10}")
+        else:
+            print("No jobs matches the filter you have selected.")
+        
+        #Ask user if they want to filter again
+        f2_option = input("Would you like to filter again? (y/n): ").lower()
+        if f2_option == "y":
+            filtered_jobs = [] #Resets the filtered jobs list
+            filter_jobs(jobs) #Calls the filter_jobs function again to allow user to filter again
+        elif f2_option != "y":
+            break #If user does not want to filter again, exit the loop
 #Login System
 def login_system():
     #Login system(Includes admin, company and jobseeker)
