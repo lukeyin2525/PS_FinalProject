@@ -801,81 +801,88 @@ def company(company):
                                 if approval == 0:
                                     continue
         elif option == 3:
-            title = input("Enter a job title: ")
-            categories = ["Cybersecurity", "Software Engineering", "AI & Data Science"]
-            print("Category: 1) Cybersecurity, 2) Software Engineering 3) AI & Data Science")
-            category = categories[check_input("Enter a number to choose the category.",1,3)-1]
-            min_pay = input("Enter your minimum pay: ")
-            max_pay = input("Enter your maximum pay: ")
-            job_type = input("Enter job type (Part time, Full time (Junior), Full time (Senior)): ").strip()
-            min_education = input("Enter minimum education (Diploma, Bachelors, Masters, PhD): ").strip()
-            exp_required = input("Enter years of experience required: ").strip()
+            loop = True
+            while loop == True:
+                title = input("Enter a job title: ")
+                categories = ["Cybersecurity", "Software Engineering", "AI & Data Science"]
+                print("Category: 1) Cybersecurity, 2) Software Engineering 3) AI & Data Science")
+                category = categories[check_input("Enter a number to choose the category.",1,3)-1]
+                min_pay = input("Enter your minimum pay: ")
+                max_pay = input("Enter your maximum pay: ")
+                job_type = input("Enter job type (Part time, Full time (Junior), Full time (Senior)): ").strip()
+                min_education = input("Enter minimum education (Diploma, Bachelors, Masters, PhD): ").strip()
+                exp_required = input("Enter years of experience required: ").strip()
 
-            tech_skills = ""
-            with open("technical.txt", "r") as file:
-                lines = file.readlines()
-                technical = []
-                for line in lines:
-                    # Strip whitespace and append the line as a whole
-                    technical.append(line.strip().split(","))
-
-            ts = []
-            ms = []
-            ind = 0
-            # Now "technical" contains lists of skills, not characters
-            if category == "Software Engineering":
-                ind = 0
-            elif category == "Cybersecurity":
-                ind = 1
-            elif category == "AI & Data Science":
-                ind = 2
-            for i, skill in enumerate(technical[ind]):
-                print(f"{i+1}) {skill}")
-            tech_skills = input("Enter technical skills (comma separated): ").strip()
-            tech_skills = tech_skills.split(",")
-            try:
-                for tech_skill in tech_skills:
-                    for i in range(len(technical[ind])):
-                        if technical[ind][int(tech_skill)-1].strip() == technical[ind][i]:
-                            ts.append(technical[ind][i])
-            except ValueError:
-                print("Invalid input. Please enter a number corresponding to the skill.")
-                continue
-            
-            normalized_job_type = job_type.lower().replace(" ", "")
-            if "fulltime(senior)" in normalized_job_type or "fulltimesenior" in normalized_job_type:
-                mgr = []
-                with open("managerial.txt","r") as file:
+                tech_skills = ""
+                with open("technical.txt", "r") as file:
                     lines = file.readlines()
+                    technical = []
                     for line in lines:
-                        skills = line.strip().split(",")
-                        for skill in skills:
-                            mgr.append(skill)
-                for i, skill in enumerate(mgr):
-                    print(f"{i+1}) {skill}")
-                mgr_skills = input("Enter managerial skills (comma separated): ").strip()
-                mgr_skills = mgr_skills.split(",")
+                        # Strip whitespace and append the line as a whole
+                        technical.append(line.strip().split(","))
 
+                ts = []
+                ms = []
+                ind = 0
+                # Now "technical" contains lists of skills, not characters
+                if category == "Software Engineering":
+                    ind = 0
+                elif category == "Cybersecurity":
+                    ind = 1
+                elif category == "AI & Data Science":
+                    ind = 2
+                for i, skill in enumerate(technical[ind]):
+                    print(f"{i+1}) {skill}")
+                tech_skills = input("Enter technical skills (comma separated): ").strip()
+                tech_skills = tech_skills.split(",")
                 try:
-                    for mgr_skill in mgr_skills:
-                        for i in range(len(mgr)):
-                            if mgr[int(mgr_skill.strip())] == mgr[i]:
-                                ms.append(mgr[i])
+                    for tech_skill in tech_skills:
+                        for i in range(len(technical[ind])):
+                            if technical[ind][int(tech_skill)-1].strip() == technical[ind][i]:
+                                ts.append(technical[ind][i])
                 except ValueError:
                     print("Invalid input. Please enter a number corresponding to the skill.")
                     continue
-            else:
-                mgr_skills = []
+                
+                normalized_job_type = job_type.lower().replace(" ", "")
+                if "fulltime(senior)" in normalized_job_type or "fulltimesenior" in normalized_job_type:
+                    mgr = []
+                    with open("managerial.txt","r") as file:
+                        lines = file.readlines()
+                        for line in lines:
+                            skills = line.strip().split(",")
+                            for skill in skills:
+                                mgr.append(skill)
+                    for i, skill in enumerate(mgr):
+                        print(f"{i+1}) {skill}")
+                    mgr_skills = input("Enter managerial skills (comma separated): ").strip()
+                    mgr_skills = mgr_skills.split(",")
 
-            job_desc = input("Enter job description: ").strip()
+                    try:
+                        for mgr_skill in mgr_skills:
+                            for i in range(len(mgr)):
+                                if mgr[int(mgr_skill.strip())] == mgr[i]:
+                                    ms.append(mgr[i])
+                    except ValueError:
+                        print("Invalid input. Please enter a number corresponding to the skill.")
+                        continue
+                else:
+                    mgr_skills = []
 
-            #Create a new job object and add it to the company
-            new_job = Job(title, category, job_type, companies[index], min_education, exp_required, ts, ms, min_pay, max_pay, job_desc)
+                job_desc = input("Enter job description: ").strip()
 
-            companies[index].add_job(new_job)
-            jobs.append(new_job)
+                #Create a new job object and add it to the company
+                new_job = Job(title, category, job_type, companies[index], min_education, exp_required, ts, ms, min_pay, max_pay, job_desc)
 
-            save_jobs("jobs.txt", jobs)
+                companies[index].add_job(new_job)
+                jobs.append(new_job)
+
+                save_jobs("jobs.txt", jobs)
+
+                reinput = check_input("Enter 1 to add another job, or 0 to go back: ", 0, 1)
+
+                if reinput == 0:
+                    loop = False
         elif option == 4:
             break
 
@@ -943,9 +950,11 @@ def jobseeker(username):
 
             #If user enters 0, exit the loop
             if option == 0:
-                break
+                continue
             else:
                 job = jobs[option - 1]
+                tech_skills = job.tech_skills if isinstance(job.tech_skills, list) else job.tech_skills.strip().split(",")
+                mgr_skills = job.mgr_skills if isinstance(job.mgr_skills, list) else job.mgr_skills.strip().split(",")
                 print(f"Job Title: {job.title}")
                 print(f"Category: {job.category}")
                 print(f"Pay: {job.min_pay} to {job.max_pay}")
@@ -953,8 +962,8 @@ def jobseeker(username):
                 print(f"Min Education: {job.min_education}")
                 print(f"Years of Experience required: {job.exp_required}")
                 print(f"Company: {job.company.name}")
-                print(f"Technical skills required: {', '.join(job.tech_skills)}")
-                print(f"Managerial skills required: {', '.join(job.mgr_skills)}")
+                print(f"Technical skills required: {', '.join(tech_skills)}")
+                print(f"Managerial skills required: {', '.join(mgr_skills)}")
                 print(f"Additional Job Description: {job.description}")
                 print(f"Company Description: {job.company.description}")
                 print(f"Company URL: {job.company.url}")
@@ -965,7 +974,7 @@ def jobseeker(username):
                     for application in jobseekers[index].applications:
                         if application.job.title == job.title and application.company.username == job.company.username:
                             print("You have already applied for this job.")
-                            break
+                            continue
                     else:
                         #If not, apply for the job
                         jobseekers[index].apply_for_job(job)
@@ -974,25 +983,30 @@ def jobseeker(username):
                 elif answer == 0:
                     continue
         elif option == 3:
-            print(f"{'Job Title':<20} {'Company':<15} {'Status':<10}")
-            #Displays index of each job in the list(1 to n) and the details of each job in the list
-            for i, application in enumerate(jobseekers[index].applications, start=1):
-                job_title = application.job.title if hasattr(application.job, 'title') else application.job
-                company_username = application.company.username if hasattr(application.company, 'username') else application.company
-                print(f"{i}) {job_title:<20} {company_username:<15} {application.status:<10}")
-            option = check_input("Enter the application number to view details, or 0 to go back: ", 0, len(jobseekers[index].applications))
+            loop = True
+            while loop == True:
+                print(f"{'Job Title':<20} {'Company':<15} {'Status':<10}")
+                #Displays index of each job in the list(1 to n) and the details of each job in the list
+                for i, application in enumerate(jobseekers[index].applications, start=1):
+                    job_title = application.job.title if hasattr(application.job, 'title') else application.job
+                    company_username = application.company.username if hasattr(application.company, 'username') else application.company
+                    print(f"{i}) {job_title:<20} {company_username:<15} {application.status:<10}")
+                option = check_input("Enter the application number to view details, or 0 to go back: ", 0, len(jobseekers[index].applications))
 
-            #If user enters 0, exit the loop
-            if option == 0:
-                break
-            else:
-                application = jobseekers[index].applications[option - 1]
-                job_title = application.job.title if hasattr(application.job, 'title') else application.job
-                company_username = application.company.username if hasattr(application.company, 'username') else application.company
-                print(f"Job Title: {job_title}")
-                print(f"Company: {company_username}")
-                print(f"Job Type: {application.job.job_type}")
-                print(f"Status: {application.status}")
+                if option == 0:
+                    loop = False
+                else:
+                    application = jobseekers[index].applications[option - 1]
+                    job_title = application.job.title if hasattr(application.job, 'title') else application.job
+                    company_username = application.company.username if hasattr(application.company, 'username') else application.company
+                    print(f"Job Title: {job_title}")
+                    print(f"Company: {company_username}")
+                    print(f"Job Type: {application.job.job_type}")
+                    print(f"Status: {application.status}")
+                    reinput = check_input("Enter 1 to check another application , or 0 to go back: ", 0, 1)
+
+                    if reinput == 0:
+                        loop = False
         else:
             break
 if __name__ == "__main__":
