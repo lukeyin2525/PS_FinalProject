@@ -84,13 +84,13 @@ def filter_jobs(jobs):
             #If user selects option 2, filter by job type
             elif f_option == 2:
                 job_type = input("Enter job type (e.g., Full Time (Senior), Full Time (Junior), Part Time): ").strip()
-                for job in jobs:
-                    if job.job_type == job_type:
-                        filtered_jobs.append(job)
-                    #If the input is not within parameter, ask user for input again
-                    elif job_type not in ["Full Time (Senior)", "Full Time (Junior)", "Part Time"]:
-                            print("Invalid Job Type. Please enter a valid job type.")
-                            re_input = True
+                if job_type not in ["Full Time (Senior)", "Full Time (Junior)", "Part Time"]:
+                    print("Invalid job type. Please enter a valid job type.")
+                    re_input = True
+                else:
+                    for job in jobs:
+                        if job.job_type == job_type:
+                            filtered_jobs.append(job)
                 if re_input != True:
                     break                
             #If user selects option 3, filter by years of experience
