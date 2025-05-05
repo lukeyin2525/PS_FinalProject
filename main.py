@@ -96,13 +96,15 @@ def filter_jobs(jobs):
             #If user selects option 1, filter by category
             if f_option == 1:
                 category = input("Enter category (e.g., Cybersecurity, Software Engineering, A.I & Data Science): ").strip()
-                for job in jobs:
-                    if job.category == category:
-                        filtered_jobs.append(job)
-                    #If the catergory input is not valid, ask user for input again
-                    elif category not in ["Cybersecurity", "Software Engineering", "A.I & Data Science"]:
+                #If the category is not in the list, print that it's invalid.
+                if category not in ["Cybersecurity", "Software Engineering", "A.I & Data Science"]:
                         print("Invalid category. Please enter a valid category.")
                         re_input = True
+                else:
+                    for job in jobs:
+                        if job.category == category:
+                            filtered_jobs.append(job)
+                #If the category is not valid, ask user to enter again
                 if re_input != True:
                     break
             #If user selects option 2, filter by job type
