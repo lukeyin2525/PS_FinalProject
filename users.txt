@@ -3,3 +3,4 @@ comp1,pass2025,company
 comp2,comp123,company
 jsuser1,JSuser123,jobseeker
 jsuser2,JSuser345,jobseeker
+comp3,comp4567,company
