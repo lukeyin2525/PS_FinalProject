@@ -773,7 +773,7 @@ def company(company):
                             print("No applicants for this job.")
                         else:
                             print(f"There are {len(applications)} applicants for this job.")
-                            option = check_input("Enter 1 to view applicants, or 0 to exit",0,1)
+                            option = check_input("Enter 1 to view applicants, or 0 to exit: ",0,1)
 
                             if option == 1:
                                 #Placeholders for the table
