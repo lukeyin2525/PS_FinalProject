@@ -96,26 +96,21 @@ def filter_jobs(jobs):
             #If user selects option 1, filter by category
             if f_option == 1:
                 category = input("Enter category (e.g., Cybersecurity, Software Engineering, A.I & Data Science): ").strip()
-                #If the category is not in the list of categories, ask user for input again
-                if category not in ["Cybersecurity", "Software Engineering", "A.I & Data Science"]:
+                for job in jobs:
+                    if job.category == category:
+                        filtered_jobs.append(job)
+                    #If the catergory input is not valid, ask user for input again
+                    elif category not in ["Cybersecurity", "Software Engineering", "A.I & Data Science"]:
                         print("Invalid category. Please enter a valid category.")
                         re_input = True
-                #If the category is valid, filter the jobs by category
-                else:
-                    for job in jobs:
-                        if job.category == category:
-                            filtered_jobs.append(job)
                 if re_input != True:
                     break
-
             #If user selects option 2, filter by job type
             elif f_option == 2:
                 job_type = input("Enter job type (e.g., Full Time (Senior), Full Time (Junior), Part Time): ").strip()
-                #If the job type is not in the list of job types, ask user for input again
                 if job_type not in ["Full Time (Senior)", "Full Time (Junior)", "Part Time"]:
                     print("Invalid job type. Please enter a valid job type.")
                     re_input = True
-                #If the job type is valid, filter the jobs by job type
                 else:
                     for job in jobs:
                         if job.job_type == job_type:
@@ -135,7 +130,7 @@ def filter_jobs(jobs):
                             re_input = True
                     if re_input != True:
                         break
-                except:
+                except ValueError:
                     print("Please enter an integer.")   
             #If user selects option 4, filter by pay
             elif f_option == 4:
@@ -149,7 +144,7 @@ def filter_jobs(jobs):
                             re_input = True
                     if re_input != True:
                         break
-                except:
+                except ValueError:
                     print("Please enter an integer.")
         if filtered_jobs:
             #Filtered jobs header
@@ -882,6 +877,7 @@ def company(company):
                 if reinput == 0:
                     loop = False
         elif option == 4:
+            print("Exiting the application. Thank you for using SCSU Jobs Portal.")
             break
 
 def jobseeker(username):
@@ -1018,6 +1014,6 @@ def jobseeker(username):
                     if reinput == 0:
                         loop = False
         else:
-            break
+            print("Exiting the application. Thank you for using SCSU Jobs Portal.")
 if __name__ == "__main__":
     main_menu()
