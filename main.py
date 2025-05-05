@@ -896,18 +896,14 @@ def company(company):
                 break
 
 def jobseeker(username):
-    companies = load_companies("companyinfo.txt")
-    jobs = load_jobs("jobs.txt", companies) 
-    jobseekers = load_jobseekers("jobseeker.txt")
-        
-    link_applications(jobseekers, jobs)
 
     while True:
-        print("1) Edit Profile")
-        print("2) View Jobs")
-        print("3) View Applications")
-        print("4) Exit")
-        option = check_input("Enter option: ", 1, 4)
+
+        companies = load_companies("companyinfo.txt")
+        jobs = load_jobs("jobs.txt", companies) 
+        jobseekers = load_jobseekers("jobseeker.txt")
+        
+        link_applications(jobseekers, jobs)
         
         index = find_user(username, jobseekers)
         if index == -1:
@@ -928,11 +924,17 @@ def jobseeker(username):
             jobseekers[index].tech_skills = new_tech_skills
             jobseekers[index].mgr_skills = new_mgr_skills
             jobseekers[index].description = new_description
+
+            jobseekers.append(Jobseeker(username, new_name, new_email, new_education, new_age, new_years_experience, new_tech_skills, new_mgr_skills, new_description, []))
             save_jobseekers("jobseeker.txt", jobseekers)
             index = find_user(username, jobseekers)
         else:
+            print("1) Edit Profile")
+            print("2) View Jobs")
+            print("3) View Applications")
+            print("4) Exit")
+            option = check_input("Enter option: ", 1, 4)
             if option == 1:
-
                 print(f"Jobseeker Name : {jobseekers[index].name}")
                 print(f"Jobseeker Email: {jobseekers[index].email}")
                 print(f"Jobseeker Education: {jobseekers[index].education}")
