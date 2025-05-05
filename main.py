@@ -165,6 +165,7 @@ def filter_jobs(jobs):
             filter_jobs(jobs) #Calls the filter_jobs function again to allow user to filter again
         elif f2_option != "y":
             break #If user does not want to filter again, exit the loop
+        break
 #Login System
 def login_system():
     #Login system(Includes admin, company and jobseeker)
