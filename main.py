@@ -638,8 +638,8 @@ def save_jobs(filename, jobs):
             company_username = job.company.username if hasattr(job.company, 'username') else job.company
             file.write(f"{job.title},{job.category},{job.job_type},{company_username},{job.min_education},{job.exp_required},{job.min_pay},{job.max_pay}\n")
             
-            tech_skills = jobseeker.tech_skills if isinstance(jobseeker.tech_skills, list) else jobseeker.tech_skills.split(",")
-            mgr_skills = jobseeker.mgr_skills if isinstance(jobseeker.mgr_skills, list) else jobseeker.mgr_skills.split(",")
+            tech_skills = job.tech_skills if isinstance(job.tech_skills, list) else job.tech_skills.split(",")
+            mgr_skills = job.mgr_skills if isinstance(job.mgr_skills, list) else job.mgr_skills.split(",")
                 
             file.write(f"{','.join(tech_skills)};{','.join(mgr_skills)}\n")
             file.write(f"{job.description}\n")
@@ -869,7 +869,7 @@ def company(company):
                         try:
                             for mgr_skill in mgr_skills:
                                 for i in range(len(mgr)):
-                                    if mgr[int(mgr_skill.strip())] == mgr[i]:
+                                    if mgr[int(mgr_skill.strip())-1] == mgr[i]:
                                         ms.append(mgr[i])
                         except ValueError:
                             print("Invalid input. Please enter a number corresponding to the skill.")
@@ -916,14 +916,6 @@ def jobseeker(username):
             new_tech_skills = input("Enter the new jobseeker technical skills: ")
             new_mgr_skills = input("Enter the new jobseeker managerial skills: ")
             new_description = input("Enter the new jobseeker description: ")
-            jobseekers[index].name = new_name
-            jobseekers[index].email = new_email
-            jobseekers[index].education = new_education
-            jobseekers[index].age = new_age
-            jobseekers[index].years_experience = new_years_experience
-            jobseekers[index].tech_skills = new_tech_skills
-            jobseekers[index].mgr_skills = new_mgr_skills
-            jobseekers[index].description = new_description
 
             jobseekers.append(Jobseeker(username, new_name, new_email, new_education, new_age, new_years_experience, new_tech_skills, new_mgr_skills, new_description, []))
             save_jobseekers("jobseeker.txt", jobseekers)
@@ -1001,22 +993,23 @@ def jobseeker(username):
                         answer = check_input("Enter 1 to apply for this job, or 0 to go back: ", 0, 1)
                         if answer == 1:
                             #Check if the jobseeker has already applied for this job
+                            already_applied = False
                             for application in jobseekers[index].applications:
                                 if application.job.title == job.title and application.company.username == job.company.username:
+                                    already_applied = True
                                     print("You have already applied for this job.")
-                                    continue
+                                    break
+                            if already_applied== False:
+                                #If not, apply for the job
+                                print(" Your profile will be sent to the company.")
+                                additional_info = input("Enter any additional information you want to send to the company: ")
+                                confirm = check_input("Enter 1 to confirm, or 0 to go back: ", 0, 1)
+                                if confirm == 1:
+                                    jobseekers[index].apply_for_job(job, additional_info)
+                                    save_jobseekers("jobseeker.txt", jobseekers)
+                                    print("Successfully applied for the job. Your application is pending")
                                 else:
-                                    #If not, apply for the job
-                                    print(" Your profile will be sent to the company.")
-                                    additional_info = input("Enter any additional information you want to send to the company: ")
-
-                                    confirm = check_input("Enter 1 to confirm, or 0 to go back: ", 0, 1)
-                                    if confirm == 1:
-                                        jobseekers[index].apply_for_job(job, additional_info)
-                                        save_jobseekers("jobseeker.txt", jobseekers)
-                                        print("Successfully applied for the job. Your application is pending")
-                                    else:
-                                        print("Application cancelled.")
+                                    print("Application cancelled.")
                             reinput = check_input("Enter 1 to apply for another job, or 0 to go back: ", 0, 1)
                             if reinput == 0:
                                 loop = False
