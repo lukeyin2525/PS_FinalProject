@@ -784,7 +784,7 @@ def company(company):
                                     print(f"{index}){'':<2} {applicant.jobseeker.name :<20} {applicant.jobseeker.age :<15} {applicant.jobseeker.education:<20} {applicant.jobseeker.years_experience:<25}")
 
                                 # Ask user for input AFTER listing all applicants
-                                option = check_input("Enter the number of applicant to view details, or 0 to exit", 0, len(applications))
+                                option = check_input("Enter the number of applicant to view details, or 0 to exit: ", 0, len(applications))
                                     
                                 if option == 0:
                                     continue
