@@ -367,17 +367,18 @@ class Jobseeker:
             self.applications = []
 
     #To add the job and application to both jobseeker and job class as a link
-    def apply_for_job(self, job):
-        application = Application(self, job, job.company)
+    def apply_for_job(self, job, additional_info):
+        application = Application(self, job, job.company,additional_info)
         self.applications.append(application)
         job.add_applicant(application)
 
 #To use as a linkage between Jobseeker and Jobs
 class Application:
-    def __init__(self, jobseeker, job, company, status="Pending"):
+    def __init__(self, jobseeker, job, company,additional_info, status="Pending"):
         self.jobseeker = jobseeker  # Can be a username string or Jobseeker object
         self.job = job              # Can be a title string or Job object
-        self.company = company      # Can be a company name string or Company object
+        self.company = company
+        self.additional_info = additional_info      # Can be a company name string or Company object
         self.status = status
 
     def update_status(self, status):
@@ -593,10 +594,11 @@ def load_jobseekers(filename):
                 if line.startswith("Application"):
                     app_info = line.split(":")[1].strip()
                     parts = app_info.split(",")
-                    if len(parts) >= 3:
+                    if len(parts) >= 4:
                         job_title = parts[0].strip()
                         job_company = parts[1].strip()
-                        apps.append(Application(username, job_title, job_company))
+                        additional_info = parts[3].strip()
+                        apps.append(Application(username, job_title, job_company,additional_info))
             
             jobseeker = Jobseeker(username, name, email, education, age, years_experience, 
                                 tech_skills, mgr_skills,description, apps)
@@ -615,11 +617,9 @@ def link_applications(jobseekers, jobs):
             for job in jobs:
                 
                 # Case-insensitive comparison with stripped whitespace
-                if job.title.strip().lower() == application.job.strip().lower() and \
-                   (job.company.strip().lower() == application.company.strip().lower() if isinstance(job.company, str) else \
-                   job.company.username.strip().lower() == application.company.strip().lower()):
+                if job.title.strip().lower() == application.job.strip().lower()and (job.company.strip().lower() == application.company.strip().lower() if isinstance(job.company, str) else job.company.username.strip().lower() == application.company.strip().lower()):
                     
-                    new_app = Application(jobseeker, job, job.company)
+                    new_app = Application(jobseeker, job, job.company, application.additional_info)
                     new_app.status = application.status
                     
                     linked_applications.append(new_app)
@@ -661,7 +661,7 @@ def save_jobseekers(filename, jobseekers):
                 # Check if job is a string or an object
                 job_title = application.job.title if hasattr(application.job, 'title') else application.job
                 company_username = application.company.username if hasattr(application.company, 'username') else application.company
-                file.write(f"{job_title},{company_username},{application.status}\n")
+                file.write(f"{job_title},{company_username},{application.status}, {application.additional_info}\n")
             file.write("-----\n")
         
         print("Loading................")
@@ -781,7 +781,8 @@ def company(company):
                                 print(f"Years Expereince: {application.jobseeker.years_experience}")
                                 print(f"Technical Skills: {application.jobseeker.tech_skills}")
                                 print(f"Managerial Skills: {application.jobseeker.mgr_skills}")
-                                print(f"Additional Description: {application.jobseeker.description}")
+                                print(f"Description: {application.jobseeker.description}")
+                                print(f"Additional Description: {application.additional_info}")
 
                                 approval = check_input("Enter 1 to approve this applicant for interview, -1 to reject, 0 to go back", -1,1)
 
@@ -968,11 +969,19 @@ def jobseeker(username):
                         for application in jobseekers[index].applications:
                             if application.job.title == job.title and application.company.username == job.company.username:
                                 print("You have already applied for this job.")
-                        else:
-                            #If not, apply for the job
-                            jobseekers[index].apply_for_job(job)
-                            save_jobseekers("jobseeker.txt", jobseekers)
-                            print("You have successfully applied for this job.")
+                                continue
+                            else:
+                                #If not, apply for the job
+                                print(" Your profile will be sent to the company.")
+                                additional_info = input("Enter any additional information you want to send to the company: ")
+
+                                confirm = check_input("Enter 1 to confirm, or 0 to go back: ", 0, 1)
+                                if confirm == 1:
+                                    jobseekers[index].apply_for_job(job, additional_info)
+                                    save_jobseekers("jobseeker.txt", jobseekers)
+                                    print("Successfully applied for the job. Your application is pending")
+                                else:
+                                    print("Application cancelled.")
                         reinput = check_input("Enter 1 to apply for another job, or 0 to go back: ", 0, 1)
                         if reinput == 0:
                             loop = False
