@@ -597,11 +597,11 @@ def load_jobseekers(filename):
                     if len(parts) >= 4:
                         job_title = parts[0].strip()
                         job_company = parts[1].strip()
+                        status = parts[2].strip()
                         additional_info = parts[3].strip()
-                        apps.append(Application(username, job_title, job_company,additional_info))
+                        apps.append(Application(username, job_title, job_company,additional_info, status))
             
-            jobseeker = Jobseeker(username, name, email, education, age, years_experience, 
-                                tech_skills, mgr_skills,description, apps)
+            jobseeker = Jobseeker(username, name, email, education, age, years_experience,tech_skills, mgr_skills,description, apps)
             jobseekers.append(jobseeker)
 
     #Finally, return the jobseekers array
@@ -619,8 +619,7 @@ def link_applications(jobseekers, jobs):
                 # Case-insensitive comparison with stripped whitespace
                 if job.title.strip().lower() == application.job.strip().lower()and (job.company.strip().lower() == application.company.strip().lower() if isinstance(job.company, str) else job.company.username.strip().lower() == application.company.strip().lower()):
                     
-                    new_app = Application(jobseeker, job, job.company, application.additional_info)
-                    new_app.status = application.status
+                    new_app = Application(jobseeker, job, job.company, application.additional_info, application.status)
                     
                     linked_applications.append(new_app)
                     job.add_applicant(new_app)
@@ -763,7 +762,7 @@ def company(company):
                         applications = []
 
                         for app in selected_job.applicants:
-                            if app.status != "Rejected":
+                            if app.status == "Pending":
                                 applications.append(app)
 
                         if len(applications) == 0:
@@ -815,67 +814,81 @@ def company(company):
                     categories = ["Cybersecurity", "Software Engineering", "AI & Data Science"]
                     print("Category: 1) Cybersecurity, 2) Software Engineering 3) AI & Data Science")
                     category = categories[check_input("Enter a number to choose the category.",1,3)-1]
-                    min_pay = input("Enter your minimum pay: ")
-                    max_pay = input("Enter your maximum pay: ")
+                    while True:
+                        try:
+                            min_pay = int(input("Enter your minimum pay: ").strip("$"))
+                            max_pay = int(input("Enter your maximum pay: ").strip("$"))
+                            break
+                        except ValueError:
+                            print("Invalid pay value. Please enter a number.")
+                            min_pay = 0
+                            max_pay = 0
                     job_type = input("Enter job type (Part time, Full time (Junior), Full time (Senior)): ").strip()
                     min_education = input("Enter minimum education (Diploma, Bachelors, Masters, PhD): ").strip()
                     exp_required = input("Enter years of experience required: ").strip()
-
-                    tech_skills = ""
-                    with open("technical.txt", "r") as file:
-                        lines = file.readlines()
-                        technical = []
-                        for line in lines:
-                            # Strip whitespace and append the line as a whole
-                            technical.append(line.strip().split(","))
-
-                    ts = []
-                    ms = []
-                    ind = 0
-                    # Now "technical" contains lists of skills, not characters
-                    if category == "Software Engineering":
-                        ind = 0
-                    elif category == "Cybersecurity":
-                        ind = 1
-                    elif category == "AI & Data Science":
-                        ind = 2
-                    for i, skill in enumerate(technical[ind]):
-                        print(f"{i+1}) {skill}")
-                    tech_skills = input("Enter technical skills (comma separated): ").strip()
-                    tech_skills = tech_skills.split(",")
-                    try:
-                        for tech_skill in tech_skills:
-                            for i in range(len(technical[ind])):
-                                if technical[ind][int(tech_skill)-1].strip() == technical[ind][i]:
-                                    ts.append(technical[ind][i])
-                    except ValueError:
-                        print("Invalid input. Please enter a number corresponding to the skill.")
-                        continue
                     
-                    normalized_job_type = job_type.lower().replace(" ", "")
-                    if "fulltime(senior)" in normalized_job_type or "fulltimesenior" in normalized_job_type:
-                        mgr = []
-                        with open("managerial.txt","r") as file:
+                    while True:
+                        tech_skills = ""
+                        with open("technical.txt", "r") as file:
                             lines = file.readlines()
+                            technical = []
                             for line in lines:
-                                skills = line.strip().split(",")
-                                for skill in skills:
-                                    mgr.append(skill)
-                        for i, skill in enumerate(mgr):
-                            print(f"{i+1}) {skill}")
-                        mgr_skills = input("Enter managerial skills (comma separated): ").strip()
-                        mgr_skills = mgr_skills.split(",")
+                                # Strip whitespace and append the line as a whole
+                                technical.append(line.strip().split(","))
 
+                        ts = []
+                        ms = []
+                        ind = 0
+                        # Now "technical" contains lists of skills, not characters
+                        if category == "Software Engineering":
+                            ind = 0
+                        elif category == "Cybersecurity":
+                            ind = 1
+                        elif category == "AI & Data Science":
+                            ind = 2
+                        for i, skill in enumerate(technical[ind]):
+                            print(f"{i+1}) {skill}")
+                        tech_skills = input("Enter technical skills (comma separated): ").strip()
+                        tech_skills = tech_skills.split(",")
                         try:
-                            for mgr_skill in mgr_skills:
-                                for i in range(len(mgr)):
-                                    if mgr[int(mgr_skill.strip())-1] == mgr[i]:
-                                        ms.append(mgr[i])
+                            for tech_skill in tech_skills:
+                                if int(tech_skill) < 1 or int(tech_skill) > len(technical[ind]):
+                                    raise ValueError
+                                for i in range(len(technical[ind])):
+                                    if technical[ind][int(tech_skill)-1].strip() == technical[ind][i]:
+                                        ts.append(technical[ind][i])
+                            break
                         except ValueError:
                             print("Invalid input. Please enter a number corresponding to the skill.")
                             continue
-                    else:
-                        mgr_skills = []
+                    while True:
+                        normalized_job_type = job_type.lower().replace(" ", "")
+                        if "fulltime(senior)" in normalized_job_type or "fulltimesenior" in normalized_job_type:
+                            mgr = []
+                            with open("managerial.txt","r") as file:
+                                lines = file.readlines()
+                                for line in lines:
+                                    skills = line.strip().split(",")
+                                    for skill in skills:
+                                        mgr.append(skill)
+                            for i, skill in enumerate(mgr):
+                                print(f"{i+1}) {skill}")
+                            mgr_skills = input("Enter managerial skills (comma separated): ").strip()
+                            mgr_skills = mgr_skills.split(",")
+
+                            try:
+                                for mgr_skill in mgr_skills:
+                                    if int(mgr_skill) < 1 or int(mgr_skill) > len(mgr):
+                                        raise ValueError
+                                    for i in range(len(mgr)):
+                                        if mgr[int(mgr_skill.strip())-1] == mgr[i]:
+                                            ms.append(mgr[i])
+                                break
+                            except ValueError:
+                                print("Invalid input. Please enter a number corresponding to the skill.")
+                                continue
+                        else:
+                            mgr_skills = []
 
                     job_desc = input("Enter job description: ").strip()
 
@@ -1001,7 +1014,7 @@ def jobseeker(username):
                                     break
                             if already_applied== False:
                                 #If not, apply for the job
-                                print(" Your profile will be sent to the company.")
+                                print("Your profile will be sent to the company.")
                                 additional_info = input("Enter any additional information you want to send to the company: ")
                                 confirm = check_input("Enter 1 to confirm, or 0 to go back: ", 0, 1)
                                 if confirm == 1:

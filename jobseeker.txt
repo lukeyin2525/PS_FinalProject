@@ -1,7 +1,6 @@
-jsuser1,Jonathan,johnjohn@gmail.com,Diploma,25,3
-Python,Java,C++;
-Hi, I am Jonathan.
-Application: Engineer,comp2,Pending, Description
+jsuser1,John,johnjohn@gmail.com,Diploma,26,3
+Python, Java, C++;
+Hi, Im John
 Application: Engineer,comp2,Pending, Description
 Application: Developer,comp1,Pending, Description
 Application: Pen Tester,comp2,Pending, I am good at this job. Hire me!
