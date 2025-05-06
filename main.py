@@ -764,7 +764,7 @@ def company(company):
                     print("No jobs posted by the company.")
                     continue
                 else:
-                    option = check_input("Enter the number of job to view in detail, or 0 to exit", 0,i)
+                    option = check_input("Enter the number of job to view in detail, or 0 to exit: ", 0,i)
 
                     if option == 0:
                         continue
@@ -813,7 +813,7 @@ def company(company):
                                     print(f"Description: {application.jobseeker.description}")
                                     print(f"Additional Description: {application.additional_info}")
 
-                                    approval = check_input("Enter 1 to approve this applicant for interview, -1 to reject, 0 to go back", -1,1)
+                                    approval = check_input("Enter 1 to approve this applicant for interview, -1 to reject, 0 to go back: ", -1,1)
 
                                     if approval == -1:
                                         application.update_status("Rejected")
