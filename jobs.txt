@@ -13,8 +13,4 @@ SECURITY SECURITY
 Developer,AI & Data Science,Full Time (Junior),comp1,Diploma,0,2000,5000
 Python,Pandas,SQL;
 This is a new AI and Data Analytics Job, apply fast. 100% acceptance.
------
-f,Software Engineering,full time (senior),comp2,Masters,5000,4000,5000
-Python,Java,C++;Data Privacy Laws,Data Privacy Laws,ROI Analysis
-aaa
------
+
