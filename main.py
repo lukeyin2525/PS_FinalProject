@@ -131,7 +131,7 @@ def filter_jobs(jobs):
                         if int(job.exp_required) <= years_exp:
                             filtered_jobs.append(job)
                         elif years_exp < 0:
-                            print("Invalid years of experience. Please enter a valid years of experience.")
+                            print("Invalid years of experience. Please enter a valid years of experience: ")
                             re_input = True
                     if re_input != True:
                         break
