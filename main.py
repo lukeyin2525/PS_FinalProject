@@ -7,6 +7,7 @@ def main_menu():
     print("2. Login")
     print("0. Exit")
 
+    ##Checks if the input is valid within the given parameters
     option = check_input("Enter option: ", 0, 2)
 
     if option == 1:
@@ -44,6 +45,8 @@ def view_jobs(jobs):
         for i, job in enumerate(jobs, start=1):
             print(f"{i}) {job.title:<17} {job.category:<20} {job.company.name:<20} {job.job_type:<20} {job.min_education:<20} {job.exp_required:<10}")
         print("To filter jobs, enter -1.")
+
+        #Checks if the input is valid within the given parameters
         option = check_input("Enter the job number to view details, or 0 to go back: ", -1, len(jobs))
 
         #If user enters 0, goes back to the main menu
@@ -177,25 +180,32 @@ def login_system():
         with open("users.txt", "r") as file:
             for line in file:
                 line = line.strip()
+                #If the line is empty, skip it
                 if line == "":
                     continue
+                #Splits the line into parts using ',' as delimiter
                 parts = line.split(",")
+                #If the number of parts is less than 3, skip it
                 if len(parts) < 3:
                     continue
+                #Assigns the parts to variables
                 username = parts[0].strip()
                 password = parts[1].strip()
                 user_type = parts[2].strip()
 
                 #If the username and password match, proceed with role specific actions
                 if username == userInput and password == passwordInput:
+                    #If the user input is admin, direct them to the admin menu by calling the admin function
                     if user_type == "admin":
                         print("Welcome Admin!")
                         admin()
                         break
+                    #If the user input is company, direct them to the company menu by calling the company function
                     elif user_type == "company":
                         print("Welcome Company!")
                         company(username)
                         break
+                    #If the user input is jobseeker, direct them to the jobseeker menu by calling the jobseeker function
                     elif user_type == "jobseeker":
                         print("Welcome Jobseeker!")
                         jobseeker(username)
@@ -215,6 +225,7 @@ def admin():
         print("3) Remove user")
         print("4) Exit")
         
+        #Checks if the input is valid within the given parameters
         a_option = check_input("Enter option: ", 1, 4)
 
         #If user picks option 1, view all user accounts
