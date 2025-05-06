@@ -7,6 +7,7 @@ def main_menu():
     print("2. Login")
     print("0. Exit")
 
+    ##Checks if the input is valid within the given parameters
     option = check_input("Enter option: ", 0, 2)
 
     if option == 1:
@@ -44,6 +45,8 @@ def view_jobs(jobs):
         for i, job in enumerate(jobs, start=1):
             print(f"{i}) {job.title:<17} {job.category:<20} {job.company.name:<20} {job.job_type:<20} {job.min_education:<20} {job.exp_required:<10}")
         print("To filter jobs, enter -1.")
+
+        #Checks if the input is valid within the given parameters
         option = check_input("Enter the job number to view details, or 0 to go back: ", -1, len(jobs))
 
         #If user enters 0, goes back to the main menu
@@ -96,13 +99,15 @@ def filter_jobs(jobs):
             #If user selects option 1, filter by category
             if f_option == 1:
                 category = input("Enter category (e.g., Cybersecurity, Software Engineering, A.I & Data Science): ").strip()
-                for job in jobs:
-                    if job.category == category:
-                        filtered_jobs.append(job)
-                    #If the catergory input is not valid, ask user for input again
-                    elif category not in ["Cybersecurity", "Software Engineering", "A.I & Data Science"]:
+                #If the category is not in the list, print that it's invalid.
+                if category not in ["Cybersecurity", "Software Engineering", "A.I & Data Science"]:
                         print("Invalid category. Please enter a valid category.")
                         re_input = True
+                else:
+                    for job in jobs:
+                        if job.category == category:
+                            filtered_jobs.append(job)
+                #If the category is not valid, ask user to enter again
                 if re_input != True:
                     break
             #If user selects option 2, filter by job type
@@ -126,7 +131,7 @@ def filter_jobs(jobs):
                         if int(job.exp_required) <= years_exp:
                             filtered_jobs.append(job)
                         elif years_exp < 0:
-                            print("Invalid years of experience. Please enter a valid years of experience.")
+                            print("Invalid years of experience. Please enter a valid years of experience: ")
                             re_input = True
                     if re_input != True:
                         break
@@ -163,6 +168,7 @@ def filter_jobs(jobs):
             filter_jobs(jobs) #Calls the filter_jobs function again to allow user to filter again
         elif f2_option != "y":
             break #If user does not want to filter again, exit the loop
+        break
 #Login System
 def login_system():
     #Login system(Includes admin, company and jobseeker)
@@ -174,25 +180,32 @@ def login_system():
         with open("users.txt", "r") as file:
             for line in file:
                 line = line.strip()
+                #If the line is empty, skip it
                 if line == "":
                     continue
+                #Splits the line into parts using ',' as delimiter
                 parts = line.split(",")
+                #If the number of parts is less than 3, skip it
                 if len(parts) < 3:
                     continue
+                #Assigns the parts to variables
                 username = parts[0].strip()
                 password = parts[1].strip()
                 user_type = parts[2].strip()
 
                 #If the username and password match, proceed with role specific actions
                 if username == userInput and password == passwordInput:
+                    #If the user input is admin, direct them to the admin menu by calling the admin function
                     if user_type == "admin":
                         print("Welcome Admin!")
                         admin()
                         break
+                    #If the user input is company, direct them to the company menu by calling the company function
                     elif user_type == "company":
                         print("Welcome Company!")
                         company(username)
                         break
+                    #If the user input is jobseeker, direct them to the jobseeker menu by calling the jobseeker function
                     elif user_type == "jobseeker":
                         print("Welcome Jobseeker!")
                         jobseeker(username)
@@ -212,6 +225,7 @@ def admin():
         print("3) Remove user")
         print("4) Exit")
         
+        #Checks if the input is valid within the given parameters
         a_option = check_input("Enter option: ", 1, 4)
 
         #If user picks option 1, view all user accounts
@@ -749,7 +763,7 @@ def company(company):
                     print("No jobs posted by the company.")
                     continue
                 else:
-                    option = check_input("Enter the number of job to view in detail, or 0 to exit", 0,i)
+                    option = check_input("Enter the number of job to view in detail, or 0 to exit: ", 0,i)
 
                     if option == 0:
                         continue
@@ -769,7 +783,7 @@ def company(company):
                             print("No applicants for this job.")
                         else:
                             print(f"There are {len(applications)} applicants for this job.")
-                            option = check_input("Enter 1 to view applicants, or 0 to exit",0,1)
+                            option = check_input("Enter 1 to view applicants, or 0 to exit: ",0,1)
 
                             if option == 1:
                                 #Placeholders for the table
@@ -780,7 +794,7 @@ def company(company):
                                     print(f"{index}){'':<2} {applicant.jobseeker.name :<20} {applicant.jobseeker.age :<15} {applicant.jobseeker.education:<20} {applicant.jobseeker.years_experience:<25}")
 
                                 # Ask user for input AFTER listing all applicants
-                                option = check_input("Enter the number of applicant to view details, or 0 to exit", 0, len(applications))
+                                option = check_input("Enter the number of applicant to view details, or 0 to exit: ", 0, len(applications))
                                     
                                 if option == 0:
                                     continue
@@ -798,7 +812,7 @@ def company(company):
                                     print(f"Description: {application.jobseeker.description}")
                                     print(f"Additional Description: {application.additional_info}")
 
-                                    approval = check_input("Enter 1 to approve this applicant for interview, -1 to reject, 0 to go back", -1,1)
+                                    approval = check_input("Enter 1 to approve this applicant for interview, -1 to reject, 0 to go back: ", -1,1)
 
                                     if approval == -1:
                                         application.update_status("Rejected")
