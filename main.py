@@ -98,30 +98,23 @@ def filter_jobs(jobs):
             re_input = False
             #If user selects option 1, filter by category
             if f_option == 1:
-                category = input("Enter category (e.g., Cybersecurity, Software Engineering, A.I & Data Science): ").strip()
-                #If the category is not in the list, print that it's invalid.
-                if category not in ["Cybersecurity", "Software Engineering", "A.I & Data Science"]:
-                        print("Invalid category. Please enter a valid category.")
-                        re_input = True
-                else:
-                    for job in jobs:
-                        if job.category == category:
-                            filtered_jobs.append(job)
+                categories = ["Cybersecurity", "Software Engineering", "A.I & Data Science"]
+                category = check_input("Enter category 1) Cybersecurity, 2) Software Engineering, 3) A.I & Data Science): ",1,3)
+            
+                for job in jobs:
+                    if job.category == categories[category-1]:
+                        filtered_jobs.append(job)
+                break
                 #If the category is not valid, ask user to enter again
-                if re_input != True:
-                    break
             #If user selects option 2, filter by job type
             elif f_option == 2:
-                job_type = input("Enter job type (e.g., Full Time (Senior), Full Time (Junior), Part Time): ").strip()
-                if job_type not in ["Full Time (Senior)", "Full Time (Junior)", "Part Time"]:
-                    print("Invalid job type. Please enter a valid job type.")
-                    re_input = True
-                else:
-                    for job in jobs:
-                        if job.job_type == job_type:
-                            filtered_jobs.append(job)
-                if re_input != True:
-                    break                
+                types = ["Full Time (Senior)", "Full Time (Junior)", "Part Time"]
+                job_type = check_input("Enter job type 1) Full Time (Senior), 2) Full Time (Junior), 3) Part Time: ",1,3)
+
+                for job in jobs:
+                    if job.job_type == types[job_type-1]:
+                        filtered_jobs.append(job)     
+                break         
             #If user selects option 3, filter by years of experience
             elif f_option == 3:
                 #If input is not an integer, ask user for input again
@@ -151,6 +144,7 @@ def filter_jobs(jobs):
                         break
                 except:
                     print("Please enter an integer.")
+            break
         if filtered_jobs:
             #Filtered jobs header
             print("Filtered Jobs:")
