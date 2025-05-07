@@ -899,11 +899,10 @@ def company(company):
                         for i, skill in enumerate(technical[ind]):
                             print(f"{i+1}) {skill}")
                         tech_skills = input("Enter technical skills (comma separated): ").strip()
-                        if tech_skills == "0":
-                            ts = []
-                            break
-                        tech_skills = tech_skills.split(",")
                         try:
+                            if tech_skills == "0":
+                                raise ValueError
+                            tech_skills = tech_skills.split(",")
                             for tech_skill in tech_skills:
                                 if int(tech_skill) < 1 or int(tech_skill) > len(technical[ind]):
                                     raise ValueError
