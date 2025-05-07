@@ -1120,5 +1120,6 @@ def jobseeker(username):
                 print("Exiting the application. Thank you for using SCSU Jobs Portal.")
                 break
 
+#Main Menu function
 if __name__ == "__main__":
     main_menu()
