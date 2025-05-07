@@ -2,8 +2,8 @@ ABC Company,www.abcco.com,comp1
 abc company description
 -----
 Zeus,wearezeus.com,comp2
-We are ZEUS!!!
+description description description, trust trust trust
 -----
 Ares,ares.com,comp3
-WE ARE ARESS!!
------
+this is our description, only 5 people can see
+

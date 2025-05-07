@@ -697,12 +697,22 @@ def company(company):
             print("The company info does not exist yet. Please create it.")
 
             #Ask the user for new descriptions
-            new_name = input("Enter the new company name: ")
-            new_url = input("Enter the new company url: ")
-            new_description = input("Enter the new company description: ")
-
-            companies.append(Company(new_name, new_url, company, new_description))
-
+            while True:
+                new_name = input("Enter the new company name: ")
+                if new_name == "":
+                    print("Please write words inside the input field.")
+                    continue
+                new_url = input("Enter the new company url: ")
+                if new_url == "":
+                    print("Please write words inside the input field.")
+                    continue
+                new_description = input("Enter the new company description: ")
+                if new_description == "":
+                    print("Please write words inside the input field.")
+                    continue
+                break
+            new_company = Company(new_name, new_url, company, new_description)
+            companies.append(new_company)
             save_companies("companyinfo.txt", companies)
 
             index = find_user(company, companies)
@@ -733,9 +743,21 @@ def company(company):
                 if answer == 1:
 
                     #Ask the user for new descriptions
-                    new_name = input("Enter the new company name: ")
-                    new_url = input("Enter the new company url: ")
-                    new_description = input("Enter the new company description: ")
+                    while True:
+                        new_name = input("Enter the new company name: ")
+                        if new_name == "":
+                            print("Please write words inside the input field.")
+                            continue
+                        new_url = input("Enter the new company url: ")
+                        if new_url == "":
+                            print("Please write words inside the input field.")
+                            continue
+                        new_description = input("Enter the new company description: ")
+                        if new_description == "":
+                            print("Please write words inside the input field.")
+                            continue
+
+                        break
 
                     companies[index].name = new_name
                     companies[index].url = new_url
@@ -824,23 +846,32 @@ def company(company):
             elif option == 3:
                 loop = True
                 while loop == True:
-                    title = input("Enter a job title: ")
-                    categories = ["Cybersecurity", "Software Engineering", "AI & Data Science"]
-                    print("Category: 1) Cybersecurity, 2) Software Engineering 3) AI & Data Science")
-                    category = categories[check_input("Enter a number to choose the category.",1,3)-1]
+
+                    #Loop to check the inputs
                     while True:
-                        try:
-                            min_pay = int(input("Enter your minimum pay: ").strip("$"))
-                            max_pay = int(input("Enter your maximum pay: ").strip("$"))
+                        title = input("Enter a job title: ").strip()
+                        categories = ["Cybersecurity", "Software Engineering", "AI & Data Science"]
+                        print("Category: 1) Cybersecurity, 2) Software Engineering 3) AI & Data Science")
+                        category = categories[check_input("Enter a number to choose the category.",1,3)-1]
+                        while True:
+                            try:
+                                min_pay = int(input("Enter your minimum pay: ").strip("$"))
+                                max_pay = int(input("Enter your maximum pay: ").strip("$"))
+                                break
+                            except ValueError:
+                                print("Invalid pay value. Please enter a number.")
+                                min_pay = 0
+                                max_pay = 0
+                        job_type = input("Enter job type (Part time, Full time (Junior), Full time (Senior): ").strip()
+                        min_education = input("Enter minimum education (Diploma, Bachelors, Masters, PhD): ").strip()
+                        exp_required = input("Enter years of experience required: ").strip()
+
+                        if title == "" or category == "" or job_type == "" or min_education == "" or exp_required == "":
+                            print("Please do not leave empty input fields. We will restart the application.")
+                            continue
+                        else:
                             break
-                        except ValueError:
-                            print("Invalid pay value. Please enter a number.")
-                            min_pay = 0
-                            max_pay = 0
-                    job_type = input("Enter job type (Part time, Full time (Junior), Full time (Senior)): ").strip()
-                    min_education = input("Enter minimum education (Diploma, Bachelors, Masters, PhD): ").strip()
-                    exp_required = input("Enter years of experience required: ").strip()
-                    
+                                      
                     while True:
                         tech_skills = ""
                         with open("technical.txt", "r") as file:
@@ -863,6 +894,9 @@ def company(company):
                         for i, skill in enumerate(technical[ind]):
                             print(f"{i+1}) {skill}")
                         tech_skills = input("Enter technical skills (comma separated): ").strip()
+                        if tech_skills == "0":
+                            ts = []
+                            break
                         tech_skills = tech_skills.split(",")
                         try:
                             for tech_skill in tech_skills:
@@ -935,14 +969,22 @@ def jobseeker(username):
         index = find_user(username, jobseekers)
         if index == -1:
             print("The jobseeker info does not exist yet. Please create it.")
-            new_name = input("Enter the new jobseeker name: ")
-            new_email = input("Enter the new jobseeker email: ")
-            new_education = input("Enter the new jobseeker education: ")
-            new_age = input("Enter the new jobseeker age: ")
-            new_years_experience = input("Enter the new jobseeker years experience: ")
-            new_tech_skills = input("Enter the new jobseeker technical skills: ")
-            new_mgr_skills = input("Enter the new jobseeker managerial skills: ")
-            new_description = input("Enter the new jobseeker description: ")
+
+            while True:
+                new_name = input("Enter the new jobseeker name: ")
+                new_email = input("Enter the new jobseeker email: ")
+                new_education = input("Enter the new jobseeker education: ")
+                new_age = input("Enter the new jobseeker age: ")
+                new_years_experience = input("Enter the new jobseeker years experience: ")
+                new_tech_skills = input("Enter the new jobseeker technical skills: ")
+                new_mgr_skills = input("Enter the new jobseeker managerial skills: ")
+                new_description = input("Enter the new jobseeker description: ")
+
+                if new_name.strip() == "" or new_email.strip() == "" or new_education.strip() == "" or new_age.strip() == "" or new_years_experience.strip() == "" or new_tech_skills.strip() == "" or new_mgr_skills.strip() == "" or new_description.strip() == "":
+                    print("Please do not leave empty input fields. We will restart the application.")
+                    continue
+                else:
+                    break
 
             jobseekers.append(Jobseeker(username, new_name, new_email, new_education, new_age, new_years_experience, new_tech_skills, new_mgr_skills, new_description, []))
             save_jobseekers("jobseeker.txt", jobseekers)
@@ -966,15 +1008,22 @@ def jobseeker(username):
                 answer = check_input("Enter 1 to edit, or 0 to return back to menu: ", 0, 1)
 
                 if answer == 1:
+                    while True:
                     #Ask the user for new descriptions
-                    new_name = input("Enter the new jobseeker name: ")
-                    new_email = input("Enter the new jobseeker email: ")
-                    new_education = input("Enter the new jobseeker education: ")
-                    new_age = input("Enter the new jobseeker age: ")
-                    new_years_experience = input("Enter the new jobseeker years experience: ")
-                    new_tech_skills = input("Enter the new jobseeker technical skills: ")
-                    new_mgr_skills = input("Enter the new jobseeker managerial skills: ")
-                    new_description = input("Enter the new jobseeker description: ")
+                        new_name = input("Enter the new jobseeker name: ")
+                        new_email = input("Enter the new jobseeker email: ")
+                        new_education = input("Enter the new jobseeker education: ")
+                        new_age = input("Enter the new jobseeker age: ")
+                        new_years_experience = input("Enter the new jobseeker years experience: ")
+                        new_tech_skills = input("Enter the new jobseeker technical skills: ")
+                        new_mgr_skills = input("Enter the new jobseeker managerial skills: ")
+                        new_description = input("Enter the new jobseeker description: ")
+                        
+                        if new_name.strip() == "" or new_email.strip() == "" or new_education.strip() == "" or new_age.strip() == "" or new_years_experience.strip() == "" or new_tech_skills.strip() == "" or new_mgr_skills.strip() == "" or new_description.strip() == "":
+                            print("Please do not leave empty input fields. We will restart the application.")
+                            continue
+                        else:
+                            break
 
                     jobseekers[index].name = new_name
                     jobseekers[index].email = new_email
