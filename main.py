@@ -299,8 +299,17 @@ def admin():
                     elif newuser_type in ["admin", "company", "jobseeker"]:
                         break
                 #write the new user details to users.txt file
-                with open("users.txt", "a") as file:
-                    file.write(f"{new_username},{new_password},{newuser_type}\n")
+                with open("users.txt", "a+") as file:
+                    # Move to beginning of file to read content
+                    file.seek(0)
+                    content = file.read()
+                    
+                    # Check if file is empty or if it ends with a newline
+                    if content == "" or content.endswith("\n"):
+                        file.write(f"{new_username},{new_password},{newuser_type}\n")
+                    else:
+                        # If file doesn't end with newline, add one before the new content
+                        file.write(f"\n{new_username},{new_password},{newuser_type}\n")
                 print("User added successfully.")
                 #Ask admin if they want to add another user
                 another_user = input("Do you want to add another user? (y/n): ").strip().lower()
@@ -953,8 +962,7 @@ def company(company):
                     if reinput == 0:
                         loop = False
             elif option == 4:
-                print("Exiting the application. Thank you for using SCSU Jobs Portal.")
-                break
+                main_menu()
 
 def jobseeker(username):
 
@@ -1117,8 +1125,7 @@ def jobseeker(username):
                         if reinput == 0:
                             loop = False
             else:
-                print("Exiting the application. Thank you for using SCSU Jobs Portal.")
-                break
+                main_menu()
 
 if __name__ == "__main__":
     main_menu()
