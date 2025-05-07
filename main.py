@@ -865,7 +865,9 @@ def company(company):
                                 print("Invalid pay value. Please enter a number.")
                                 min_pay = 0
                                 max_pay = 0
-                        job_type = input("Enter job type (Part time, Full time (Junior), Full time (Senior): ").strip()
+                        types = ["Full Time (Senior)", "Full Time (Junior)", "Part Time"]
+                        type = check_input("Enter job type 1) Full Time (Senior), 2) Full Time (Junior), 3) Part Time: ",1,3)
+                        job_type = types[type-1]
                         min_education = input("Enter minimum education (Diploma, Bachelors, Masters, PhD): ").strip()
                         exp_required = input("Enter years of experience required: ").strip()
 
