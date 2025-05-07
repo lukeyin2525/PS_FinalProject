@@ -1127,5 +1127,6 @@ def jobseeker(username):
             else:
                 main_menu()
 
+#Main Menu function
 if __name__ == "__main__":
     main_menu()
