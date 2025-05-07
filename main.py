@@ -135,7 +135,7 @@ def filter_jobs(jobs):
                             re_input = True
                     if re_input != True:
                         break
-                except ValueError:
+                except:
                     print("Please enter an integer.")   
             #If user selects option 4, filter by pay
             elif f_option == 4:
@@ -149,7 +149,7 @@ def filter_jobs(jobs):
                             re_input = True
                     if re_input != True:
                         break
-                except ValueError:
+                except:
                     print("Please enter an integer.")
         if filtered_jobs:
             #Filtered jobs header
