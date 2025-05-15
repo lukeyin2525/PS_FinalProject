@@ -14,4 +14,7 @@ Developer,AI & Data Science,Full Time (Junior),comp1,Diploma,0,2000,5000
 Python,Pandas,SQL;
 This is a new AI and Data Analytics Job, apply fast. 100% acceptance.
 -----
-
+a,Software Engineering,Full Time (Senior),comp2,1,1,1,1
+Python;Agile
+kjl
+-----

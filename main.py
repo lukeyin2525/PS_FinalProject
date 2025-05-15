@@ -69,8 +69,8 @@ def view_jobs(jobs):
             print(f"Company: {job.company.name}")
 
             #If tech skills is a string, split into a list.
-            tech_skills = job.tech_skills.split(",") if job.tech_skills else [job.tech_skills]
-            mgr_skills = job.mgr_skills.split(",") if job.mgr_skills else [job.mgr_skills]
+            tech_skills = job.tech_skills if isinstance(job.tech_skills, list) else (job.tech_skills.split(",") if job.tech_skills else [])
+            mgr_skills = job.mgr_skills if isinstance(job.mgr_skills, list) else (job.mgr_skills.split(",") if job.mgr_skills else [])
 
             print(f"Technical skills required: {', '.join(tech_skills)}")
             print(f"Managerial skills required: {', '.join(mgr_skills)}")
@@ -900,14 +900,24 @@ def company(company):
                             print(f"{i+1}) {skill}")
                         tech_skills = input("Enter technical skills (comma separated): ").strip()
                         try:
-                            if tech_skills == "0":
+                            if tech_skills == "0" or len(tech_skills) < 1:
                                 raise ValueError
-                            tech_skills = tech_skills.split(",")
-                            for tech_skill in tech_skills:
-                                if int(tech_skill) < 1 or int(tech_skill) > len(technical[ind]):
+                            if "," in tech_skills:
+                                tech_skills = tech_skills.split(",")
+                            else:
+                                tech_skills = tech_skills
+                            if isinstance(tech_skills, list):
+                                for tech_skill in tech_skills:
+                                    if int(tech_skill) < 1 or int(tech_skill) > len(technical[ind]):
+                                        raise ValueError
+                                    for i in range(len(technical[ind])):
+                                        if technical[ind][int(tech_skill)-1].strip() == technical[ind][i]:
+                                            ts.append(technical[ind][i])
+                            else:
+                                if int(tech_skills) < 1 or int(tech_skills) > len(technical[ind]):
                                     raise ValueError
                                 for i in range(len(technical[ind])):
-                                    if technical[ind][int(tech_skill)-1].strip() == technical[ind][i]:
+                                    if technical[ind][int(tech_skills)-1].strip() == technical[ind][i]:
                                         ts.append(technical[ind][i])
                             break
                         except ValueError:
@@ -926,11 +936,16 @@ def company(company):
                             for i, skill in enumerate(mgr):
                                 print(f"{i+1}) {skill}")
                             mgr_skills = input("Enter managerial skills (comma separated): ").strip()
-                            mgr_skills = mgr_skills.split(",")
-
                             try:
+                                if mgr_skills == "0" or len(mgr_skills) < 1:
+                                    raise ValueError
+                                if "," in mgr_skills:
+                                    mgr_skills = mgr_skills.split(",")
+                                else:
+                                    mgr_skills = [mgr_skills]  # Make a single-item list if no commas
+                                
                                 for mgr_skill in mgr_skills:
-                                    if int(mgr_skill) < 1 or int(mgr_skill) > len(mgr):
+                                    if int(mgr_skill.strip()) < 1 or int(mgr_skill.strip()) > len(mgr):
                                         raise ValueError
                                     for i in range(len(mgr)):
                                         if mgr[int(mgr_skill.strip())-1] == mgr[i]:
@@ -974,16 +989,16 @@ def jobseeker(username):
             print("The jobseeker info does not exist yet. Please create it.")
 
             while True:
-                new_name = input("Enter the new jobseeker name: ")
-                new_email = input("Enter the new jobseeker email: ")
-                new_education = input("Enter the new jobseeker education: ")
-                new_age = input("Enter the new jobseeker age: ")
-                new_years_experience = input("Enter the new jobseeker years experience: ")
-                new_tech_skills = input("Enter the new jobseeker technical skills: ")
-                new_mgr_skills = input("Enter the new jobseeker managerial skills: ")
-                new_description = input("Enter the new jobseeker description: ")
+                new_name = input("Enter the new jobseeker name: ").strip()
+                new_email = input("Enter the new jobseeker email: ").strip()
+                new_education = input("Enter the new jobseeker education: ").strip()
+                new_age = input("Enter the new jobseeker age: ").strip()
+                new_years_experience = input("Enter the new jobseeker years experience: ").strip()
+                new_tech_skills = input("Enter the new jobseeker technical skills: ").strip()
+                new_mgr_skills = input("Enter the new jobseeker managerial skills: ").strip()
+                new_description = input("Enter the new jobseeker description: ").strip()
 
-                if new_name.strip() == "" or new_email.strip() == "" or new_education.strip() == "" or new_age.strip() == "" or new_years_experience.strip() == "" or new_tech_skills.strip() == "" or new_mgr_skills.strip() == "" or new_description.strip() == "":
+                if new_name == "" or new_email == "" or new_education == "" or new_age == "" or new_years_experience == "" or new_tech_skills == "" or new_mgr_skills == "" or new_description == "":
                     print("Please do not leave empty input fields. We will restart the application.")
                     continue
                 else:
@@ -1012,17 +1027,16 @@ def jobseeker(username):
 
                 if answer == 1:
                     while True:
-                    #Ask the user for new descriptions
-                        new_name = input("Enter the new jobseeker name: ")
-                        new_email = input("Enter the new jobseeker email: ")
-                        new_education = input("Enter the new jobseeker education: ")
-                        new_age = input("Enter the new jobseeker age: ")
-                        new_years_experience = input("Enter the new jobseeker years experience: ")
-                        new_tech_skills = input("Enter the new jobseeker technical skills: ")
-                        new_mgr_skills = input("Enter the new jobseeker managerial skills: ")
-                        new_description = input("Enter the new jobseeker description: ")
-                        
-                        if new_name.strip() == "" or new_email.strip() == "" or new_education.strip() == "" or new_age.strip() == "" or new_years_experience.strip() == "" or new_tech_skills.strip() == "" or new_mgr_skills.strip() == "" or new_description.strip() == "":
+                        new_name = input("Enter the new jobseeker name: ").strip()
+                        new_email = input("Enter the new jobseeker email: ").strip()
+                        new_education = input("Enter the new jobseeker education: ").strip()
+                        new_age = input("Enter the new jobseeker age: ").strip()
+                        new_years_experience = input("Enter the new jobseeker years experience: ").strip()
+                        new_tech_skills = input("Enter the new jobseeker technical skills: ").strip()
+                        new_mgr_skills = input("Enter the new jobseeker managerial skills: ").strip()
+                        new_description = input("Enter the new jobseeker description: ").strip()
+
+                        if new_name == "" or new_email == "" or new_education == "" or new_age == "" or new_years_experience == "" or new_tech_skills == "" or new_mgr_skills == "" or new_description == "":
                             print("Please do not leave empty input fields. We will restart the application.")
                             continue
                         else:
@@ -1054,8 +1068,8 @@ def jobseeker(username):
                         loop = False
                     else:
                         job = jobs[option - 1]
-                        tech_skills = job.tech_skills if isinstance(job.tech_skills, list) else job.tech_skills.strip().split(",")
-                        mgr_skills = job.mgr_skills if isinstance(job.mgr_skills, list) else job.mgr_skills.strip().split(",")
+                        tech_skills = job.tech_skills if isinstance(job.tech_skills, list) else (job.tech_skills.split(",") if job.tech_skills else [])
+                        mgr_skills = job.mgr_skills if isinstance(job.mgr_skills, list) else (job.mgr_skills.split(",") if job.mgr_skills else [])
                         print(f"Job Title: {job.title}")
                         print(f"Category: {job.category}")
                         print(f"Pay: {job.min_pay} to {job.max_pay}")

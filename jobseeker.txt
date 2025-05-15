@@ -1,13 +1,13 @@
-jsuser1,John,johnjohn@gmail.com,Diploma,26,3
+jsuser1,John,johnjohn@gmail.com,Bachelors,24,3
 Python, Java, C++;
-Hi, Im John
+I am John!
 Application: Engineer,comp2,Pending, Description
 Application: Developer,comp1,Pending, Description
 Application: Pen Tester,comp2,Pending, I am good at this job. Hire me!
 -----
 jsuser2,Henry,henry@gmail.com,Degree,27,5
 Cisco Firewall,IDS/IPS,Cloud Security;
-Hi, I am Jonathan.
+Hi, I am not Jonathan.
 Application: Engineer,comp2,Pending, Description
 Application: Developer,comp1,Pending, I am better at this job. hire me
 -----
